@@ -1,0 +1,28 @@
+@startuml 
+
+hide methods
+hide stereotypes
+hide empty members
+hide circles
+
+entity Persoon {
+  naam : VARCHAR[50] NN <pk>
+  afstand : DECIMAL[3,1] NN
+}
+
+entity Hobby {
+  naam : VARCHAR[50] NN <pk>
+  individuele_hobby : TINYINT NN
+  omschrijving : TEXT NN
+}
+
+entity PersoonHobby {
+  persoon_naam : VARCHAR[50] NN <pk> <fk1>
+  volgorde : INT NN <pk>
+  hobby_naam : VARCHAR[50] NN <fk2>
+}
+
+Persoon <-- PersoonHobby : fk1
+Hobby <-- PersoonHobby : fk2
+
+@enduml

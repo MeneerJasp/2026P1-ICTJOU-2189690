@@ -1,0 +1,32 @@
+@startuml
+
+hide methods
+hide stereotypes
+hide empty members
+hide circles
+
+entity Leverancier {
+    naam VARCHAR[100] NN <pk>
+    transportkosten DECIMAL[6,2] NN
+}
+
+entity Scenario {
+    naam VARCHAR[50] NN <pk>
+    budget_limiet DECIMAL[10,2] NN
+}
+
+entity Onderdeel {
+    scenario VARCHAR[50] NN <pk><fk1>
+    titel VARCHAR[100] NN <pk>
+    prijs DECIMAL[10,2] NN
+    leverancier VARCHAR[100] <fk2>
+    prioriteit INT NN
+}
+
+' identifying relatie
+Scenario <-- Onderdeel : fk1
+
+' non-identifying relatie
+Leverancier <-- Onderdeel : fk2
+
+@enduml

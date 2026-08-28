@@ -1,0 +1,37 @@
+@startuml
+/'
+ Dit is een conceptueel domeinmodel met afspraken over notatiewijzen.
+
+ <pi> is primary identifier, dit wordt in de database een kolom die deel uit maakt van de primary key
+ 
+'/
+
+hide methods
+hide stereotypes
+hide empty members
+hide circles
+
+entity Leverancier {
+    <u>naam</u>
+    transportkosten
+}
+
+entity Scenario {
+    <u>naam</u>
+    budget_limiet
+}
+
+entity Onderdeel {
+    <u>titel</u>
+    prijs
+    prioriteit
+}
+
+' identifying relatie, maakt van Onderdeel een zwak entiteittype t.o.v. Scenario.
+' Dit betekent dat in de database de FK-kolom scenario ook deel uit maakt van de primary key van Onderdeel.
+Scenario <--o{ Onderdeel : bevat
+
+' non-identifying relatie
+Leverancier ||--o{ Onderdeel : geleverd_door
+
+@enduml

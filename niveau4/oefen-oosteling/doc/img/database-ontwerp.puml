@@ -1,0 +1,31 @@
+@startuml
+
+hide methods
+hide stereotypes
+hide empty members
+hide circles
+
+entity Attractie {
+    naam VARCHAR[100] NN <pk>
+    bouwjaar INT NN
+    locatie VARCHAR[100] NN
+    omschrijving TEXT
+}
+
+entity Onderhoudstype {
+    naam VARCHAR[100] NN <pk>
+    is_veiligheidskritisch TINYINT[1] NN
+    omschrijving TEXT
+}
+
+entity Onderhoudslog {
+    attractie VARCHAR[100] NN <pk><fk1>
+    onderhoudstype VARCHAR[100] NN <pk><fk2>
+    datum DATE NN <pk>
+    dagen_buiten_bedrijf INT NN
+}
+
+Attractie <-- Onderhoudslog : fk1
+Onderhoudstype <-- Onderhoudslog : fk2
+
+@enduml

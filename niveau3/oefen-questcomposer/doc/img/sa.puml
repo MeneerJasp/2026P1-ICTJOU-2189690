@@ -1,0 +1,76 @@
+@startuml
+
+hide stereotypes
+hide empty members
+hide circle
+
+title QuestComposer - Software-architectuur
+
+entity "questcomposer.py" as App {
+	-- Applicatiefuncties --
+	maak_verbinding()
+	toon_menu()
+	main()
+}
+
+entity "onderdelenbeheer.py" as PartsUI {
+	-- Use-casefuncties --
+	voeg_onderdeel_toe()
+	pas_onderdeelprijs_aan()
+	verwijder_onderdeel()
+	toon_onderdelen_binnen_budget()
+	-- Helperfuncties --
+	toon_beschikbare_scenarios()
+	kies_scenario()
+	toon_onderdelenlijst()
+	-- Databasefuncties --
+	haal_alle_onderdelen_op()
+	haal_scenarios_op()
+	check_leverancier_bestaat()
+	voeg_onderdeel_toe_aan_db()
+	haal_onderdelen_van_scenario_op()
+	update_prijs()
+	verwijder_onderdeel_uit_db()
+	haal_onderdelen_binnen_budget()
+}
+
+entity "scenariobeheer.py" as ScenarioUI {
+	-- Use-casefuncties --
+	pas_scenariobudget_aan()
+	bereken_spaarplan()
+	toon_overzicht_per_scenario()
+	-- Helperfuncties --
+	-- Databasefuncties --
+	haal_alle_onderdelen_op()
+	haal_scenarios_op()
+	haal_scenariostatistieken_op()
+	scenario_bestaat()
+	haal_kosten_op_van_scenario()
+	update_scenariobudget()
+}
+
+entity "importbeheer.py" as ImportUI {
+	-- Use-casefuncties --
+	importeer_csv()
+	-- Helperfuncties --
+	-- Databasefuncties --
+	check_leverancier_bestaat()
+	scenario_bestaat()
+	voeg_leverancier_toe()
+	voeg_scenario_toe()
+	voeg_onderdeel_toe_aan_db()
+}
+
+entity "beveiliging.py" as Auth {
+	-- Use-casefuncties --
+	controleer_toegangscode()
+	-- Helperfuncties --
+	lees_toegangscode_hash()
+	-- Databasefuncties --
+}
+
+App --> PartsUI
+App --> ScenarioUI
+App --> ImportUI
+App --> Auth
+@enduml

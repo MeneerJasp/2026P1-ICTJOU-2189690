@@ -1,0 +1,30 @@
+@startuml
+
+hide methods
+hide stereotypes
+hide empty members
+hide circles
+
+entity Attractie {
+    <u>naam</u>
+    bouwjaar
+    locatie
+    omschrijving
+}
+
+entity Onderhoudstype {
+    <u>naam</u>
+    is_veiligheidskritisch
+    omschrijving
+}
+
+entity Onderhoudslog {
+    <u>datum</u>
+    dagen_buiten_bedrijf
+}
+
+' identifying relaties
+Attractie <--o{ Onderhoudslog : van
+Onderhoudstype <--o{ Onderhoudslog : type
+
+@enduml

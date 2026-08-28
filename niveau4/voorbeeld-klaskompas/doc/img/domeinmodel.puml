@@ -1,0 +1,27 @@
+@startuml
+
+hide methods
+hide stereotypes
+hide empty members
+hide circles
+
+entity persoon {
+    <u>naam</u>
+    afstand
+}
+
+entity hobby {
+    <u>naam</u>
+    individuele_hobby
+    omschrijving
+}
+
+entity persoon_hobby {
+    <u>volgorde</u>
+}
+
+' identifying relaties
+persoon <--o{ persoon_hobby : heeft
+hobby ||--o{ persoon_hobby : betreft
+
+@enduml

@@ -1,0 +1,14 @@
+INSERT INTO Verkoop (verkoopmoment, categorie, opbrengst) VALUES ('2026-03-02 10:15:00', 'kleding', 1500);
+INSERT INTO Verkoop (verkoopmoment, categorie, opbrengst) VALUES ('2026-03-04 14:30:00', 'boeken', 750);
+INSERT INTO Verkoop (verkoopmoment, categorie, opbrengst) VALUES ('2026-03-06 11:05:00', 'kleding', 2250);
+INSERT INTO Verkoop (verkoopmoment, categorie, opbrengst) VALUES ('2026-03-09 10:10:00', 'boeken', 1250);
+INSERT INTO Verkoop (verkoopmoment, categorie, opbrengst) VALUES ('2026-03-12 15:50:00', 'kleding', 1000);
+INSERT INTO Verkoop (verkoopmoment, categorie, opbrengst) VALUES ('2026-03-18 11:45:00', 'boeken', 500);
+INSERT INTO Verkoop (verkoopmoment, categorie, opbrengst) VALUES ('2026-03-15 12:00:00', 'elektronica', 4500);
+INSERT INTO Verkoop (verkoopmoment, categorie, opbrengst) VALUES ('2026-04-14 16:40:00', 'games', 1250);
+INSERT INTO Verkoop (verkoopmoment, categorie, opbrengst) VALUES ('2026-05-02 14:15:00', 'boeken', 2000);
+INSERT INTO Verkoop (verkoopmoment, categorie, opbrengst) VALUES ('2026-05-06 12:25:00', 'kleding', 3500);
+INSERT INTO Verkoop (verkoopmoment, categorie, opbrengst) VALUES ('2026-05-10 09:50:00', 'boeken', 1500);
+INSERT INTO Verkoop (verkoopmoment, categorie, opbrengst) VALUES ('2026-05-14 09:55:00', 'kleding', 1200);
+INSERT INTO Verkoop (verkoopmoment, categorie, opbrengst) VALUES ('2026-05-18 16:20:00', 'boeken', 1850);
+INSERT INTO Verkoop (verkoopmoment, categorie, opbrengst) VALUES ('2026-05-22 13:35:00', 'overige', 500);
