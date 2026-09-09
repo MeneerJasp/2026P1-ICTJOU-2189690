@@ -1,0 +1,7 @@
+DROP TABLE IF EXISTS Workout;
+
+CREATE TABLE Workout (
+    datumtijd DATETIME NOT NULL PRIMARY KEY,
+    type TEXT NOT NULL,
+    duur INTEGER NOT NULL
+);

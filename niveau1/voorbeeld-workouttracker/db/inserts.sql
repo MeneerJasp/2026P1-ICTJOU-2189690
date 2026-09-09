@@ -1,0 +1,10 @@
+INSERT INTO Workout (datumtijd, type, duur) VALUES ('2026-04-01 08:00:00', 'Hardlopen', 45);
+INSERT INTO Workout (datumtijd, type, duur) VALUES ('2026-04-02 18:30:00', 'Fietsen', 60);
+INSERT INTO Workout (datumtijd, type, duur) VALUES ('2026-04-03 07:15:00', 'Wandelen', 30);
+INSERT INTO Workout (datumtijd, type, duur) VALUES ('2026-04-04 19:00:00', 'Krachttraining', 50);
+INSERT INTO Workout (datumtijd, type, duur) VALUES ('2026-04-05 09:30:00', 'Zwemmen', 40);
+INSERT INTO Workout (datumtijd, type, duur) VALUES ('2026-04-06 17:45:00', 'Hardlopen', 35);
+INSERT INTO Workout (datumtijd, type, duur) VALUES ('2026-04-07 20:00:00', 'Yoga', 55);
+INSERT INTO Workout (datumtijd, type, duur) VALUES ('2026-04-08 08:15:00', 'Fietsen', 75);
+INSERT INTO Workout (datumtijd, type, duur) VALUES ('2026-04-09 18:00:00', 'Krachttraining', 45);
+INSERT INTO Workout (datumtijd, type, duur) VALUES ('2026-04-10 10:00:00', 'Wandelen', 60);
