@@ -6,7 +6,7 @@ connection = sqlite3.connect(
 
 cursor = connection.cursor()
 
-keuze = ""
+keuze = "" 
 
 while keuze.upper() != "X":
 
@@ -19,10 +19,6 @@ while keuze.upper() != "X":
     print("5. Nieuwe workout toevoegen")
     print("6. Totale duur van workouts tonen")
     print("7. Toon alle unieke workout types")
-    print("8. Toon alle fiets workouts")
-    print("9. Toon workouts langer dan 30 minuten")
-    print("10. Toon hardloop workouts langer dan 30 minuten")
-    print("11. Toon workouts tussen 30 en 60 minuten")
     print("X. Afsluiten")
 
     keuze = input("Maak een keuze: ")
@@ -130,20 +126,42 @@ while keuze.upper() != "X":
 
     # 6. Totale duur van alle workouts
     elif keuze == "6":
-        cursor.execute(
-            """
-            SELECT SUM(duur)
-            FROM Workout
-            """
-        )
+        cursor.execute("SELECT * FROM Workout")
+        workouts = cursor.fetchall()
 
-        totaal = cursor.fetchone()
+        totale_duur_in_minuten = 0
+
+        for workout in workouts:
+            duur = workout[2]
+            totale_duur_in_minuten += duur
+
+        uren = totale_duur_in_minuten // 60
+        minuten = totale_duur_in_minuten % 60
 
         print(
             "Totale duur:",
-            totaal[0],
+            uren,
+            "uur en",
+            minuten,
             "minuten"
         )
+
+    #betere versie:
+    #elif keuze == "6":
+    #    cursor.execute(
+    #        """
+    #        SELECT SUM(duur)
+    #        FROM Workout
+    #        """
+    #    )
+
+    #    totaal = cursor.fetchone()
+
+    #    print(
+    #        "Totale duur:",
+    #        totaal[0],
+    #        "minuten"
+    #    )
 
     # 7. Alle unieke workout types
     elif keuze == "7":
@@ -158,68 +176,6 @@ while keuze.upper() != "X":
 
         for workout in workouts:
             print(workout[0])
-
-    # 8. Alle fiets workouts
-    elif keuze == "8":
-        cursor.execute(
-            """
-            SELECT datumtijd, type, duur
-            FROM Workout
-            WHERE type = 'Fietsen'
-            """
-        )
-
-        workouts = cursor.fetchall()
-
-        for workout in workouts:
-            print(workout)
-
-    # 9. Workouts langer dan 30 minuten
-    elif keuze == "9":
-        cursor.execute(
-            """
-            SELECT datumtijd, type, duur
-            FROM Workout
-            WHERE duur > 30
-            """
-        )
-
-        workouts = cursor.fetchall()
-
-        for workout in workouts:
-            print(workout)
-
-    # 10. Hardlopen langer dan 30 minuten
-    elif keuze == "10":
-        cursor.execute(
-            """
-            SELECT datumtijd, type, duur
-            FROM Workout
-            WHERE type = 'Hardlopen'
-            AND duur > 30
-            """
-        )
-
-        workouts = cursor.fetchall()
-
-        for workout in workouts:
-            print(workout)
-
-    # 11. Workouts langer dan 30 en korter dan 60 minuten
-    elif keuze == "11":
-        cursor.execute(
-            """
-            SELECT datumtijd, type, duur
-            FROM Workout
-            WHERE duur > 30
-            AND duur < 60
-            """
-        )
-
-        workouts = cursor.fetchall()
-
-        for workout in workouts:
-            print(workout)
 
     # Ongeldige keuze
     else:
