@@ -117,6 +117,7 @@ def toon_menu():
     print("|  6. Totale opbrengst tonen                          |")
     print("|  7. Toon alle gebruikte categorieen                 |")
     print("|  8. Zoeken in verkopen                              |")
+    print("|  9. Totale opbrengst per maand tonen                |")
     print("|                                                     |")
     print("|  X. Afsluiten                                       |")
     print("+-----------------------------------------------------+")
@@ -518,6 +519,70 @@ while keuze.upper() != "X":
 
 
     # --------------------------------------------------
+    # 9. US6 - TOTALE OPBRENGST PER MAAND
+    # --------------------------------------------------
+
+    elif keuze == "9":
+
+        leeg_scherm()
+
+        cursor.execute(
+            """
+            SELECT verkoopmoment, opbrengst
+            FROM Verkoop
+            ORDER BY verkoopmoment
+            """
+        )
+
+        verkopen = cursor.fetchall()
+
+        opbrengst_per_maand = {}
+
+        for verkoop in verkopen:
+
+            verkoopmoment = verkoop[0]
+
+            opbrengst = float(
+                str(verkoop[1]).replace(",", ".")
+            )
+
+
+            maand = verkoopmoment[0:7]
+
+            if maand in opbrengst_per_maand:
+                opbrengst_per_maand[maand] += opbrengst
+
+            else:
+                opbrengst_per_maand[maand] = opbrengst
+
+        print(CYAAN + VET)
+        print("+------------------------------------------------------+")
+        print("|               OPBRENGST PER MAAND                    |")
+        print("+------------------------------------------------------+")
+        print(RESET)
+
+        if len(opbrengst_per_maand) == 0:
+
+            print(
+                "Er zijn nog geen verkopen."
+            )
+
+        else:
+
+            for maand in opbrengst_per_maand:
+
+                print(
+                    f"{maand} : "
+                    f"€ {opbrengst_per_maand[maand]:.2f}"
+                )
+
+        print()
+        print("+------------------------------------------------------+")
+
+        wachten()
+
+
+    # --------------------------------------------------
     # X. AFSLUITEN
     # --------------------------------------------------
 
@@ -545,7 +610,7 @@ while keuze.upper() != "X":
         print()
         print(
             ROOD
-            + "Ongeldige keuze. Kies 1 t/m 8 of X."
+            + "Ongeldige keuze. Kies opties 1 t/m 9 of X om af te sluiten."
             + RESET
         )
 
