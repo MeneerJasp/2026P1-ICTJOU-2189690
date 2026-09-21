@@ -12,6 +12,8 @@ Dit document beschrijft het ontwerp van Platenbak. Dit ontwerp biedt de technisc
 
 ## Tabelontwerp
 
+<img src="img/Tabelontwerp.png" width="400">
+
 ## Afhankelijkheden
 
 De applicatie "Platenbak" is afhankelijk van de volgende bibliotheek:
