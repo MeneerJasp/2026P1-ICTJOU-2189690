@@ -10,6 +10,16 @@ def maak_verbinding():
     return verbinding
 
 
+def toon_menu():
+    """Geeft het menu van de platenbak"""
+    print("1. Track toevoegen")
+
+
+def vraag_keuze():
+    """Vraagt gebruiker om een keuze"""
+    keuze = int(input("Maak een keuze: "))
+    return keuze
+
 def voeg_track_toe_aan_database(
     verbinding,
     artiest,
@@ -18,52 +28,22 @@ def voeg_track_toe_aan_database(
     jaar,
     genre
 ):
-    """Voegt een track toe aan de database."""
+    """Voegt een track toe aan de database"""
     pass
 
-
-def toon_menu():
-    """Toont het hoofdmenu van de Platenbak."""
-    print()
-    print("   Platenbak")
-    print("1. Track toevoegen")
-
-
-def vraag_keuze():
-    """Vraagt de gebruiker om een menukeuze en retourneert deze als getal."""
-    keuze = int(input("Maak een keuze: "))
-    return keuze
-
-
 def voeg_track_toe(verbinding):
-    """Vraagt trackgegevens en geeft deze door aan de databasefunctie."""
+    """Vraagt de track gegevens om toe te voegen aan de database"""
     artiest = input("Artiest: ")
     titel = input("Titel: ")
     duur = input("Duur: ")
     jaar = input("Jaar: ")
-    genre = input("Genre: ")
-
-    voeg_track_toe_aan_database(
-        verbinding,
-        artiest,
-        titel,
-        duur,
-        jaar,
-        genre
-    )
 
 
 def start_platenbak():
-    """Start de interactieve hoofdloop van de Platenbak."""
+    """Start de interactieve hoofdloop van de platenbak."""
     verbinding = maak_verbinding()
 
     print("Welkom bij de Platenbak! Veel plezier met je collectie.")
-
-    toon_menu()
-    keuze = vraag_keuze()
-
-    if keuze == 1:
-        voeg_track_toe(verbinding)
 
     verbinding.close()
 
