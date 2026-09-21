@@ -8,18 +8,12 @@ from pathlib import Path
 from datetime import datetime
 
 
-# ==================================================
-# INSTELLINGEN
-# ==================================================
-
+# Instellingen
 # True  = openen in apart terminalvenster
 # False = draaien in huidige terminal
 APARTE_TERMINAL = True
 
-
-# ==================================================
 # APART TERMINALVENSTER OPENEN
-# ==================================================
 
 if APARTE_TERMINAL and os.environ.get("VINDIT_TERMINAL") != "1":
 
@@ -57,9 +51,7 @@ if APARTE_TERMINAL and os.environ.get("VINDIT_TERMINAL") != "1":
         sys.exit()
 
 
-# ==================================================
 # DATABASE
-# ==================================================
 
 database = (
     Path(__file__).resolve().parent.parent
@@ -71,9 +63,7 @@ connection = sqlite3.connect(database)
 cursor = connection.cursor()
 
 
-# ==================================================
 # KLEUREN
-# ==================================================
 
 CYAAN = "\033[96m"
 GROEN = "\033[92m"
@@ -84,9 +74,7 @@ VET = "\033[1m"
 RESET = "\033[0m"
 
 
-# ==================================================
 # FUNCTIES
-# ==================================================
 
 def leeg_scherm():
     os.system("clear")
@@ -158,9 +146,9 @@ def toon_verkopen(verkopen):
     wachten()
 
 
-# ==================================================
+
 # PROGRAMMA
-# ==================================================
+
 
 keuze = ""
 
@@ -172,9 +160,9 @@ while keuze.upper() != "X":
         GEEL + "Maak je keuze: " + RESET
     )
 
-    # --------------------------------------------------
+    
     # 1. ALLE VERKOPEN
-    # --------------------------------------------------
+    
 
     if keuze == "1":
 
@@ -191,9 +179,9 @@ while keuze.upper() != "X":
         toon_verkopen(verkopen)
 
 
-    # --------------------------------------------------
+    
     # 2. KLEDING
-    # --------------------------------------------------
+    
 
     elif keuze == "2":
 
@@ -211,9 +199,9 @@ while keuze.upper() != "X":
         toon_verkopen(verkopen)
 
 
-    # --------------------------------------------------
+    
     # 3. BOEKEN
-    # --------------------------------------------------
+    
 
     elif keuze == "3":
 
@@ -231,9 +219,9 @@ while keuze.upper() != "X":
         toon_verkopen(verkopen)
 
 
-    # --------------------------------------------------
+    
     # 4. OVERIGE VERKOPEN
-    # --------------------------------------------------
+    
 
     elif keuze == "4":
 
@@ -252,9 +240,9 @@ while keuze.upper() != "X":
         toon_verkopen(verkopen)
 
 
-    # --------------------------------------------------
+    
     # 5. NIEUWE VERKOOP TOEVOEGEN
-    # --------------------------------------------------
+    
 
     elif keuze == "5":
 
@@ -352,9 +340,9 @@ while keuze.upper() != "X":
         wachten()
 
 
-    # --------------------------------------------------
+    
     # 6. TOTALE OPBRENGST
-    # --------------------------------------------------
+    
 
     elif keuze == "6":
 
@@ -396,9 +384,9 @@ while keuze.upper() != "X":
         wachten()
 
 
-    # --------------------------------------------------
+    
     # 6. TOTALE OPBRENGST
-    # --------------------------------------------------
+   
 
     elif keuze == "6":
 
@@ -440,9 +428,9 @@ while keuze.upper() != "X":
         wachten()
 
 
-    # --------------------------------------------------
+    
     # 7. GEBRUIKTE CATEGORIEEN
-    # --------------------------------------------------
+   
 
     elif keuze == "7":
 
@@ -477,9 +465,8 @@ while keuze.upper() != "X":
         wachten()
 
 
-    # --------------------------------------------------
     # 8. ZOEKEN
-    # --------------------------------------------------
+    
 
     elif keuze == "8":
 
@@ -518,9 +505,7 @@ while keuze.upper() != "X":
         toon_verkopen(resultaten)
 
 
-    # --------------------------------------------------
-    # 9. US6 - TOTALE OPBRENGST PER MAAND
-    # --------------------------------------------------
+    # 9. TOTALE OPBRENGST PER MAAND
 
     elif keuze == "9":
 
@@ -582,9 +567,7 @@ while keuze.upper() != "X":
         wachten()
 
 
-    # --------------------------------------------------
     # X. AFSLUITEN
-    # --------------------------------------------------
 
     elif keuze.upper() == "X":
 
@@ -600,10 +583,7 @@ while keuze.upper() != "X":
 
         connection.close()
 
-
-    # --------------------------------------------------
     # ONJUISTE KEUZE
-    # --------------------------------------------------
 
     else:
 
