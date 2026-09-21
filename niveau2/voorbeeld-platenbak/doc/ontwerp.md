@@ -29,6 +29,10 @@ De applicatie "Platenbak" bestaat uit de volgende functies:
 
 ### Model-functies (datalaag)
 
+- `voeg_track_toe_aan_database(verbinding, artiest, titel, duur, jaar, genre)`:
+  Voegt een track toe aan de database. De functie krijgt de
+  databaseverbinding en de gegevens van de track mee en retourneert niets.
+
 - `verwijder_track_uit_database(verbinding, artiest, titel)`: Verwijdert
   een track uit de database.
 
@@ -49,7 +53,22 @@ De applicatie "Platenbak" bestaat uit de volgende functies:
 
 ### Presentatie-functies (view/controller)
 
-- `verwijder_track(verbinding)`: Vraagt welk track verwijderd moet
+- `toon_menu()`: Toont het menu van de applicatie. De functie heeft geen
+  parameters en retourneert niets.
+
+- `vraag_keuze()`: Vraagt de gebruiker om een keuze uit het menu.
+  De functie heeft geen parameters en retourneert de keuze als een getal.
+
+- `toon_track_info(track)`: Toont de informatie van een track.
+  De functie krijgt de informatie over de track mee als parameter en
+  retourneert niets.
+
+- `voeg_track_toe(verbinding)`: Vraagt de gebruiker om de gegevens van
+  een nieuwe track. De functie krijgt de databaseverbinding mee en vraagt
+  om artiest, titel, duur, jaar en genre. Daarna roept deze functie
+  `voeg_track_toe_aan_database()` aan.
+
+- `verwijder_track(verbinding)`: Vraagt welke track verwijderd moet
   worden en voert dat uit.
 
 - `stel_playlist_samen(verbinding)`: Stelt een playlist samen op basis van een
@@ -67,4 +86,3 @@ De applicatie "Platenbak" bestaat uit de volgende functies:
 ### Hoofdfunctie
 
 - `start_platenbak()`: Start de hoofdloop en handelt gebruikersinvoer af.
-
