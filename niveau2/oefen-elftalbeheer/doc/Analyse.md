@@ -36,3 +36,194 @@ VV Finecce wil een applicatie om elftallen en spelers centraal te beheren. De ap
 | C6 | **Onderhoudbaarheid:** de applicatie moet later uitgebreid kunnen worden met nieuwe functies. |
 | C7 | **Gelijktijdig gebruik:** de eerste versie hoeft maar door één persoon tegelijk gebruikt te worden. |
 | C8 | **Instelbaarheid:** de ondergrens voor het aantal basisspelers moet per elftal instelbaar zijn en niet hardcoded. |
+
+# Use cases
+
+## UC1 – Elftal toevoegen
+
+**Actor:** Medewerker
+**Doel:** Een nieuw elftal toevoegen.
+
+**Scenario:**
+
+1. Medewerker kiest voor elftal toevoegen.
+2. Medewerker vult code, omschrijving, coach en maximumleeftijd in.
+3. Systeem controleert de gegevens.
+4. Systeem slaat het elftal op.
+
+**Uitzondering:**
+Als de code al bestaat of gegevens ongeldig zijn, wordt het elftal niet opgeslagen.
+
+---
+
+## UC2 – Speler toevoegen
+
+**Actor:** Medewerker
+**Doel:** Een speler toevoegen aan een elftal.
+
+**Scenario:**
+
+1. Medewerker kiest voor speler toevoegen.
+2. Medewerker vult naam en leeftijd in.
+3. Medewerker kiest een vaste positie en een elftal.
+4. Systeem controleert of de speler niet te oud is.
+5. Systeem slaat de speler op.
+
+**Uitzondering:**
+Als de speler te oud is voor het elftal, wordt de speler niet toegevoegd.
+
+---
+
+## UC3 – Speler verwijderen
+
+**Actor:** Medewerker
+**Doel:** Een speler verwijderen.
+
+**Scenario:**
+
+1. Medewerker kiest voor speler verwijderen.
+2. Medewerker voert de naam van de speler in.
+3. Systeem zoekt de speler.
+4. Medewerker bevestigt het verwijderen.
+5. Systeem verwijdert de speler.
+
+**Uitzondering:**
+Als de speler niet bestaat, toont het systeem een melding.
+
+---
+
+## UC4 – Speler zoeken
+
+**Actor:** Medewerker
+**Doel:** Een speler op naam vinden.
+
+**Scenario:**
+
+1. Medewerker kiest voor speler zoeken.
+2. Medewerker voert een naam in.
+3. Systeem zoekt naar de speler.
+4. Systeem toont de gevonden gegevens.
+
+**Uitzondering:**
+Als geen speler wordt gevonden, toont het systeem een melding.
+
+---
+
+## UC5 – Overzicht elftallen en spelers tonen
+
+**Actor:** Medewerker
+**Doel:** Bekijken welke spelers bij welk elftal horen.
+
+**Scenario:**
+
+1. Medewerker kiest voor het elftallenoverzicht.
+2. Systeem haalt alle elftallen en spelers op.
+3. Systeem toont per elftal de bijbehorende spelers.
+
+---
+
+## UC6 – Spelers per positie tonen
+
+**Actor:** Medewerker
+**Doel:** Bekijken hoeveel spelers per positie in een elftal zitten.
+
+**Scenario:**
+
+1. Medewerker kiest een elftal.
+2. Systeem groepeert de spelers per positie.
+3. Systeem toont de spelers en aantallen per positie.
+
+---
+
+## UC7 – Gemiddelde leeftijd tonen
+
+**Actor:** Medewerker
+**Doel:** De gemiddelde leeftijd van een elftal bekijken.
+
+**Scenario:**
+
+1. Medewerker kiest een elftal.
+2. Systeem haalt de leeftijden van de spelers op.
+3. Systeem berekent de gemiddelde leeftijd.
+4. Systeem toont het gemiddelde.
+
+---
+
+## UC8 – Leeftijdscontrole uitvoeren
+
+**Actor:** Medewerker
+**Doel:** Controleren of spelers te oud zijn voor hun elftal.
+
+**Scenario:**
+
+1. Medewerker start de leeftijdscontrole.
+2. Systeem vergelijkt per speler de leeftijd met de maximumleeftijd van het elftal.
+3. Systeem toont spelers die te oud zijn.
+
+---
+
+## UC9 – Passend elftal voorstellen
+
+**Actor:** Medewerker
+**Doel:** Een geschikt elftal voor een nieuwe speler vinden.
+
+**Scenario:**
+
+1. Medewerker voert de leeftijd van de speler in.
+2. Systeem controleert de beschikbare elftallen.
+3. Systeem zoekt een elftal waarvoor de speler jong genoeg is.
+4. Systeem toont het voorgestelde elftal.
+
+---
+
+## UC10 – Speler van de maand kiezen
+
+**Actor:** Medewerker
+**Doel:** Willekeurig een speler van de maand kiezen.
+
+**Scenario:**
+
+1. Medewerker kiest voor speler van de maand.
+2. Systeem kiest willekeurig een speler.
+3. Systeem toont de gekozen speler.
+
+---
+
+## UC11 – Spelers exporteren
+
+**Actor:** Medewerker
+**Doel:** Spelersgegevens exporteren.
+
+**Scenario:**
+
+1. Medewerker kiest voor exporteren.
+2. Systeem haalt de spelers per elftal op.
+3. Systeem maakt een spreadsheetbestand.
+4. Systeem meldt dat de export klaar is.
+
+---
+
+## UC12 – Gegevens per seizoen bekijken
+
+**Actor:** Medewerker
+**Doel:** Gegevens van een eerder seizoen bekijken.
+
+**Scenario:**
+
+1. Medewerker kiest een seizoen.
+2. Systeem haalt de gegevens van dat seizoen op.
+3. Systeem toont de elftallen en spelers.
+
+---
+
+## UC13 – Controleren op te weinig spelers
+
+**Actor:** Medewerker
+**Doel:** Zien welke elftallen te weinig basisspelers hebben.
+
+**Scenario:**
+
+1. Medewerker start de controle.
+2. Systeem telt per elftal het aantal basisspelers.
+3. Systeem vergelijkt dit met de ingestelde ondergrens.
+4. Systeem toont welke elftallen te weinig spelers hebben.
