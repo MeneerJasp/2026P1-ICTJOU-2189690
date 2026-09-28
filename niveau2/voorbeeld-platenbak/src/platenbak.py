@@ -1,9 +1,11 @@
 import sqlite3
 
 
+DATABASE = "niveau2/voorbeeld-platenbak/db/platenbak.db"
+
+
 def maak_verbinding():
-    """Maakt een verbinding met de database."""
-    verbinding = sqlite3.connect("platenbak.db")
+    verbinding = sqlite3.connect(DATABASE)
     verbinding.row_factory = sqlite3.Row
     verbinding.execute("PRAGMA foreign_keys = ON")
     verbinding.autocommit = True
@@ -11,14 +13,17 @@ def maak_verbinding():
 
 
 def toon_menu():
-    """Geeft het menu van de platenbak"""
     print("1. Track toevoegen")
+    print("2. Tracks bekijken")
+    print("3. Tracks zoeken")
+    print("4. Artiest toevoegen")
+    print("0. Afsluiten")
 
 
 def vraag_keuze():
-    """Vraagt gebruiker om een keuze"""
     keuze = int(input("Maak een keuze: "))
     return keuze
+
 
 def voeg_track_toe_aan_database(
     verbinding,
@@ -28,44 +33,68 @@ def voeg_track_toe_aan_database(
     jaar,
     genre
 ):
-    """Voegt een track toe aan de database"""
-    pass
+    cursor = verbinding.cursor()
+
+    cursor.execute("""
+    INSERT INTO track (artiest, titel, genre, duur, jaar)
+    VALUES (?, ?, ?, ?, ?)
+    """, (artiest, titel, genre, duur, jaar))
+
+    print(f"{titel} is toegevoegd")
+
 
 def voeg_track_toe(verbinding):
-    """Vraagt de track gegevens om toe te voegen aan de database"""
     artiest = input("Artiest: ")
     titel = input("Titel: ")
+    genre = input("Genre: ")
     duur = input("Duur: ")
     jaar = input("Jaar: ")
 
+    if bestaat_artiest(artiest) and bestaat_genre(genre):
+        voeg_track_toe_aan_database(
+            verbinding,
+            artiest,
+            titel,
+            duur,
+            jaar,
+            genre
+        )
+    else:
+        print("Artiest of genre bestaat niet")
 
 
 def haal_tracks_op_all():
-    verbinding = sqlite3.connect("platenbak.db")
+    verbinding = sqlite3.connect(DATABASE)
     cursor = verbinding.cursor()
-    
+
     cursor.execute("""
-    SELECT artiest, titel, genre, duur, jaar FROM track
+    SELECT artiest, titel, genre, duur, jaar
+    FROM track
     """)
 
     tracks = cursor.fetchall()
     verbinding.close()
     return tracks
 
+
 def toon_tracks_all():
     tracks = haal_tracks_op_all()
-    if len(tracks) == 0 :
+
+    if len(tracks) == 0:
         print("Er zijn geen tracks gevonden")
     else:
         for track in tracks:
-            print_track(track)
+            print_tracka(track)
+
 
 def print_tracka(track):
     print("Artiest:", track[0])
     print("Titel:", track[1])
     print("Genre:", track[2])
     print("Duur:", track[3], "seconden")
+    print("Jaar:", track[4])
     print("###########################")
+
 
 def toon_tracks_artiest(artiest):
     tracks = haal_tracks_artiest_op(artiest)
@@ -74,50 +103,122 @@ def toon_tracks_artiest(artiest):
         print("Er zijn geen tracks van deze artiest gevonden")
     else:
         for track in tracks:
-            print_track(track)
+            print_tracka(track)
+
 
 def haal_tracks_artiest_op(artiest):
-    verbinding = sqlite3.connect("platenbak.db")
+    verbinding = sqlite3.connect(DATABASE)
     cursor = verbinding.cursor()
 
     cursor.execute("""
     SELECT artiest, titel, genre, duur, jaar
-    FROM track WHERE artiest = ?
-    """, (artiest))
+    FROM track
+    WHERE artiest = ?
+    """, (artiest,))
+
     tracks = cursor.fetchall()
     verbinding.close()
     return tracks
 
+
 def bestaat_artiest(artiest):
-    verbinding = sqlite3.connect("platenbak.db")
+    verbinding = sqlite3.connect(DATABASE)
     cursor = verbinding.cursor()
 
     cursor.execute("""
-    SELECT naam FROM artiest WHERE naam = ?
+    SELECT naam
+    FROM artiest
+    WHERE naam = ?
     """, (artiest,))
-    resultaat = cursor.fetchall()
+
+    resultaat = cursor.fetchone()
     verbinding.close()
-    return resultatt is not None
+
+    return resultaat is not None
+
 
 def bestaat_genre(genre):
-    verbinding = sqlite3.connect("platenbak.db")
+    verbinding = sqlite3.connect(DATABASE)
     cursor = verbinding.cursor()
 
     cursor.execute("""
-    SELECT naam FROM genre WHERE naam = ?
+    SELECT naam
+    FROM genre
+    WHERE naam = ?
     """, (genre,))
-    resultaat = cursor.fetchall()
+
+    resultaat = cursor.fetchone()
     verbinding.close()
-    return resultaat is not none
+
+    return resultaat is not None
+
+
+def zoek_tracks():
+    jaar = input("Vanaf welk jaar: ")
+    genre = input("Genre: ")
+
+    verbinding = sqlite3.connect(DATABASE)
+    cursor = verbinding.cursor()
+
+    cursor.execute("""
+    SELECT artiest, titel, genre, duur, jaar
+    FROM track
+    WHERE jaar >= ? AND genre = ?
+    """, (jaar, genre))
+
+    tracks = cursor.fetchall()
+    verbinding.close()
+
+    if len(tracks) == 0:
+        print("Er zijn geen tracks gevonden")
+    else:
+        for track in tracks:
+            print_tracka(track)
+
+
+def voeg_artiest_toe():
+    naam = input("Naam artiest: ")
+    land = input("Land: ")
+
+    verbinding = sqlite3.connect(DATABASE)
+    cursor = verbinding.cursor()
+
+    cursor.execute("""
+    INSERT INTO artiest (naam, land)
+    VALUES (?, ?)
+    """, (naam, land))
+
+    verbinding.commit()
+    verbinding.close()
+
+    print(f"{naam} is toegevoegd")
 
 
 def start_platenbak():
-    """Start de interactieve hoofdloop van de platenbak."""
     verbinding = maak_verbinding()
 
     print("Welkom bij de Platenbak! Veel plezier met je collectie.")
 
+    keuze = -1
+
+    while keuze != 0:
+        toon_menu()
+        keuze = vraag_keuze()
+
+        if keuze == 1:
+            voeg_track_toe(verbinding)
+
+        elif keuze == 2:
+            toon_tracks_all()
+
+        elif keuze == 3:
+            zoek_tracks()
+
+        elif keuze == 4:
+            voeg_artiest_toe()
+
     verbinding.close()
+
 
 if __name__ == '__main__':
     start_platenbak()

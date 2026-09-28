@@ -33,7 +33,8 @@ Voor alle testcases wordt de volgende voorbereiding verwacht:
 * Het systeem verhoogt de sessieteller voor toegevoegde tracks met 1.
 * In de database staat een nieuwe track met bovengenoemde gegevens.
 
-
+**Resultaat:**
+* Het returned: `Frozen Flame is toegevoegd`.
 
 ---
 
