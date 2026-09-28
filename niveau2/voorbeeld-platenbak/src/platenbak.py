@@ -84,7 +84,7 @@ def toon_tracks_all():
         print("Er zijn geen tracks gevonden")
     else:
         for track in tracks:
-            print_tracka(track)
+            print_tracks(track)
 
 
 def print_tracks(track):
@@ -103,7 +103,7 @@ def toon_tracks_artiest(artiest):
         print("Er zijn geen tracks van deze artiest gevonden")
     else:
         for track in tracks:
-            print_tracka(track)
+            print_tracks(track)
 
 
 def haal_tracks_artiest_op(artiest):
@@ -173,7 +173,7 @@ def zoek_tracks():
         print("Er zijn geen tracks gevonden")
     else:
         for track in tracks:
-            print_tracka(track)
+            print_tracks(track)
 
 
 def voeg_artiest_toe():
