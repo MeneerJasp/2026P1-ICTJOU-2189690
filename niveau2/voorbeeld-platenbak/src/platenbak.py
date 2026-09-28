@@ -87,7 +87,7 @@ def toon_tracks_all():
             print_tracka(track)
 
 
-def print_tracka(track):
+def print_tracks(track):
     print("Artiest:", track[0])
     print("Titel:", track[1])
     print("Genre:", track[2])
@@ -216,6 +216,13 @@ def start_platenbak():
 
         elif keuze == 4:
             voeg_artiest_toe()
+        
+        elif keuze == 0:
+            quit()
+
+        else:
+            print("Keuze is ongeldig")
+            start_platenbak()
 
     verbinding.close()
 
