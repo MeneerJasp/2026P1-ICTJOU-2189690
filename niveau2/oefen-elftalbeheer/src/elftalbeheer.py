@@ -3,6 +3,10 @@ import sqlite3
 
 DATABASE = "niveau2/oefen-elftalbeheer/db/elftalbeheer.db"
 
+aantal_elftallen_toegevoegd = 0
+aantal_spelers_toegevoegd = 0
+aantal_spelers_verwijderd = 0
+
 
 def maak_verbinding():
     verbinding = sqlite3.connect(DATABASE)
@@ -15,6 +19,8 @@ def toon_menu():
     print("2. Speler toevoegen")
     print("3. Speler zoeken")
     print("4. Elftallen bekijken")
+    print("5. Speler verwijderen")
+    print("6. Gemiddelde leeftijd per elftal")
     print("0. Afsluiten")
 
 
@@ -24,6 +30,8 @@ def vraag_keuze():
 
 
 def voeg_elftal_toe():
+    global aantal_elftallen_toegevoegd
+
     elftalcode = input("Elftalcode: ")
     omschrijving = input("Omschrijving: ")
     coach = input("Coach: ")
@@ -40,10 +48,13 @@ def voeg_elftal_toe():
     verbinding.commit()
     verbinding.close()
 
+    aantal_elftallen_toegevoegd += 1
     print("Elftal is toegevoegd")
 
 
 def voeg_speler_toe():
+    global aantal_spelers_toegevoegd
+
     naam = input("Naam: ")
     elftal = input("Elftalcode: ")
     positie = input("Positie: ")
@@ -73,6 +84,7 @@ def voeg_speler_toe():
         """, (naam, elftal, positie, leeftijd))
 
         verbinding.commit()
+        aantal_spelers_toegevoegd += 1
 
         print("Speler is toegevoegd")
 
@@ -121,6 +133,68 @@ def toon_elftallen():
         print(resultaat)
 
 
+def verwijder_speler():
+    global aantal_spelers_verwijderd
+
+    naam = input("Naam speler: ")
+
+    verbinding = maak_verbinding()
+    cursor = verbinding.cursor()
+
+    cursor.execute("""
+    SELECT naam
+    FROM speler
+    WHERE naam = ?
+    """, (naam,))
+
+    speler = cursor.fetchone()
+
+    if speler is None:
+        print("Speler niet gevonden")
+
+    else:
+        cursor.execute("""
+        DELETE FROM speler
+        WHERE naam = ?
+        """, (naam,))
+
+        verbinding.commit()
+        aantal_spelers_verwijderd += 1
+
+        print("Speler is verwijderd")
+
+    verbinding.close()
+
+
+def toon_gemiddelde_leeftijd_per_elftal():
+    verbinding = maak_verbinding()
+    cursor = verbinding.cursor()
+
+    cursor.execute("""
+    SELECT elftal.elftalcode,
+           AVG(speler.leeftijd)
+    FROM elftal
+    LEFT JOIN speler
+    ON elftal.elftalcode = speler.elftal
+    GROUP BY elftal.elftalcode
+    """)
+
+    resultaten = cursor.fetchall()
+    verbinding.close()
+
+    for resultaat in resultaten:
+        if resultaat[1] is None:
+            print(resultaat[0], "Geen spelers")
+        else:
+            print(resultaat[0], round(resultaat[1], 1))
+
+
+def toon_sessiestatistieken():
+    print("Elftallen toegevoegd:", aantal_elftallen_toegevoegd)
+    print("Spelers toegevoegd:", aantal_spelers_toegevoegd)
+    print("Spelers verwijderd:", aantal_spelers_verwijderd)
+
+
 def start_elftalbeheer():
     keuze = -1
 
@@ -140,7 +214,14 @@ def start_elftalbeheer():
         elif keuze == 4:
             toon_elftallen()
 
+        elif keuze == 5:
+            verwijder_speler()
+
+        elif keuze == 6:
+            toon_gemiddelde_leeftijd_per_elftal()
+
         elif keuze == 0:
+            toon_sessiestatistieken()
             print("Programma afgesloten")
 
         else:
