@@ -17,6 +17,10 @@ def toon_menu():
     print("2. Tracks bekijken")
     print("3. Tracks zoeken")
     print("4. Artiest toevoegen")
+    print("5. Statistieken bekijken")
+    print("6. Artiesten per land bekijken")
+    print("7. Genreoverzicht bekijken")
+    print("8. Sessiestatistieken bekijken")
     print("0. Afsluiten")
 
 
@@ -59,8 +63,10 @@ def voeg_track_toe(verbinding):
             jaar,
             genre
         )
+        return True
     else:
         print("Artiest of genre bestaat niet")
+        return False
 
 
 def haal_tracks_op_all():
@@ -194,19 +200,91 @@ def voeg_artiest_toe():
     print(f"{naam} is toegevoegd")
 
 
+def haal_statistieken_op_uit_database(verbinding):
+    cursor = verbinding.cursor()
+
+    cursor.execute("""
+    SELECT COUNT(*), AVG(duur), SUM(duur)
+    FROM track
+    """)
+
+    statistieken = cursor.fetchone()
+    return statistieken
+
+
+def toon_statistieken(verbinding):
+    statistieken = haal_statistieken_op_uit_database(verbinding)
+
+    print("Aantal tracks:", statistieken[0])
+    print("Gemiddelde duur:", statistieken[1], "seconden")
+    print("Totale duur:", statistieken[2], "seconden")
+
+
+def haal_landen_op_uit_database(verbinding):
+    cursor = verbinding.cursor()
+
+    cursor.execute("""
+    SELECT land, COUNT(*)
+    FROM artiest
+    GROUP BY land
+    """)
+
+    landen = cursor.fetchall()
+    return landen
+
+
+def toon_landen(verbinding):
+    landen = haal_landen_op_uit_database(verbinding)
+
+    for land in landen:
+        print("Land:", land[0])
+        print("Aantal artiesten:", land[1])
+        print("###########################")
+
+
+def haal_genreoverzicht_op_uit_database(verbinding):
+    cursor = verbinding.cursor()
+
+    cursor.execute("""
+    SELECT genre, COUNT(*)
+    FROM track
+    GROUP BY genre
+    """)
+
+    genres = cursor.fetchall()
+    return genres
+
+
+def toon_genreoverzicht(verbinding):
+    genres = haal_genreoverzicht_op_uit_database(verbinding)
+
+    for genre in genres:
+        print("Genre:", genre[0])
+        print("Aantal tracks:", genre[1])
+        print("###########################")
+
+
+def toon_sessiestatistieken(aantal_tracks_toegevoegd):
+    print("Aantal tracks toegevoegd deze sessie:", aantal_tracks_toegevoegd)
+
+
 def start_platenbak():
     verbinding = maak_verbinding()
 
     print("Welkom bij de Platenbak! Veel plezier met je collectie.")
 
     keuze = -1
+    aantal_tracks_toegevoegd = 0
 
     while keuze != 0:
         toon_menu()
         keuze = vraag_keuze()
 
         if keuze == 1:
-            voeg_track_toe(verbinding)
+            track_toegevoegd = voeg_track_toe(verbinding)
+
+            if track_toegevoegd:
+                aantal_tracks_toegevoegd += 1
 
         elif keuze == 2:
             toon_tracks_all()
@@ -216,7 +294,19 @@ def start_platenbak():
 
         elif keuze == 4:
             voeg_artiest_toe()
-        
+
+        elif keuze == 5:
+            toon_statistieken(verbinding)
+
+        elif keuze == 6:
+            toon_landen(verbinding)
+
+        elif keuze == 7:
+            toon_genreoverzicht(verbinding)
+
+        elif keuze == 8:
+            toon_sessiestatistieken(aantal_tracks_toegevoegd)
+
         elif keuze == 0:
             quit()
 

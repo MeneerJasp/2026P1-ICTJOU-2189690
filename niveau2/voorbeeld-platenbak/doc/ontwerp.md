@@ -39,16 +39,19 @@ De applicatie "Platenbak" bestaat uit de volgende functies:
   een track uit de database.
 
 - `haal_statistieken_op_uit_database(verbinding)`: Haalt statistieken op
-  over de collectie.
+  over de collectie. Hierbij worden de SQL-statistiekfuncties `COUNT`,
+  `AVG` en `SUM` gebruikt.
 
 - `haal_landen_op_uit_database(verbinding)`: Haalt landen met aantallen
-  artiesten op.
+  artiesten op. Hierbij wordt `GROUP BY` gebruikt om de artiesten per land
+  te groeperen.
 
 - `zoek_tracks_op_criteria_uit_database(verbinding, genre, jaar_min)`:
   Zoekt tracks op genre en minimaal jaar.
 
 - `haal_genreoverzicht_op_uit_database(verbinding)`: Haalt het
-  genre-overzicht op.
+  genre-overzicht op. Hierbij wordt `GROUP BY` gebruikt om de tracks
+  per genre te groeperen.
 
 - `track_bestaat_in_database(verbinding, artiest, titel)`: Controleert of
   een track met gegeven artiest en titel bestaat.
@@ -68,7 +71,8 @@ De applicatie "Platenbak" bestaat uit de volgende functies:
 - `voeg_track_toe(verbinding)`: Vraagt de gebruiker om de gegevens van
   een nieuwe track. De functie krijgt de databaseverbinding mee en vraagt
   om artiest, titel, duur, jaar en genre. Daarna roept deze functie
-  `voeg_track_toe_aan_database()` aan.
+  `voeg_track_toe_aan_database()` aan. De functie retourneert `True`
+  wanneer de track is toegevoegd en anders `False`.
 
 - `verwijder_track(verbinding)`: Vraagt welke track verwijderd moet
   worden en voert dat uit.
@@ -85,6 +89,19 @@ De applicatie "Platenbak" bestaat uit de volgende functies:
 
 - `toon_genreoverzicht(verbinding)`: Toont het genre-overzicht.
 
+- `toon_sessiestatistieken(aantal_tracks_toegevoegd)`: Toont hoeveel
+  tracks tijdens de huidige sessie zijn toegevoegd.
+
+### Sessiestatistieken
+
+Tijdens het uitvoeren van de applicatie wordt bijgehouden hoeveel tracks
+zijn toegevoegd. De teller begint bij het starten van de applicatie op 0
+en wordt met 1 verhoogd wanneer een track succesvol wordt toegevoegd.
+
+De sessiestatistieken worden niet opgeslagen in de database.
+
 ### Hoofdfunctie
 
 - `start_platenbak()`: Start de hoofdloop en handelt gebruikersinvoer af.
+  In deze functie wordt ook de sessieteller voor toegevoegde tracks
+  bijgehouden.
