@@ -74,6 +74,13 @@ De applicatie "Platenbak" bestaat uit de volgende functies:
   `voeg_track_toe_aan_database()` aan. De functie retourneert `True`
   wanneer de track is toegevoegd en anders `False`.
 
+- `voeg_genre_toe(verbinding)`: Vraagt de naam en omschrijving van een
+  nieuw genre. Het genre wordt alleen toegevoegd als het nog niet bestaat.
+
+- `verwijder_genre(verbinding)`: Vraagt welk genre verwijderd moet worden.
+  Een genre wordt alleen verwijderd als het bestaat en er geen tracks aan
+  gekoppeld zijn.
+
 - `verwijder_track(verbinding)`: Vraagt welke track verwijderd moet
   worden en voert dat uit.
 

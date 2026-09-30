@@ -1,3 +1,4 @@
+import random
 import sqlite3
  
 
@@ -21,6 +22,7 @@ def toon_menu():
     print("4. Elftallen bekijken")
     print("5. Speler verwijderen")
     print("6. Gemiddelde leeftijd per elftal")
+    print("7. Speler van de maand")
     print("0. Afsluiten")
 
 
@@ -41,24 +43,66 @@ def voeg_elftal_toe():
     cursor = verbinding.cursor()
 
     cursor.execute("""
-    INSERT INTO elftal (elftalcode, omschrijving, coach, maximumleeftijd)
-    VALUES (?, ?, ?, ?)
-    """, (elftalcode, omschrijving, coach, maximumleeftijd))
+    SELECT elftalcode
+    FROM elftal
+    WHERE elftalcode = ?
+    """, (elftalcode,))
 
-    verbinding.commit()
+    bestaand_elftal = cursor.fetchone()
+
+    if bestaand_elftal is not None:
+        print("Elftal bestaat al")
+    else:
+        cursor.execute("""
+        INSERT INTO elftal (elftalcode, omschrijving, coach, maximumleeftijd)
+        VALUES (?, ?, ?, ?)
+        """, (elftalcode, omschrijving, coach, maximumleeftijd))
+
+        verbinding.commit()
+        aantal_elftallen_toegevoegd += 1
+        print("Elftal is toegevoegd")
+
     verbinding.close()
 
-    aantal_elftallen_toegevoegd += 1
-    print("Elftal is toegevoegd")
+
+def geef_elftalsuggestie(leeftijd):
+    verbinding = maak_verbinding()
+    cursor = verbinding.cursor()
+
+    cursor.execute("""
+    SELECT elftalcode, maximumleeftijd
+    FROM elftal
+    ORDER BY maximumleeftijd, elftalcode
+    """)
+
+    elftallen = cursor.fetchall()
+    verbinding.close()
+
+    teller = 0
+    suggestie = None
+
+    while teller < len(elftallen) and suggestie is None:
+        if leeftijd <= elftallen[teller][1]:
+            suggestie = elftallen[teller][0]
+
+        teller += 1
+
+    if suggestie is None:
+        print("Geen passend elftal gevonden")
+    else:
+        print("Voorgesteld elftal:", suggestie)
 
 
 def voeg_speler_toe():
     global aantal_spelers_toegevoegd
 
     naam = input("Naam: ")
+    leeftijd = int(input("Leeftijd: "))
+
+    geef_elftalsuggestie(leeftijd)
+
     elftal = input("Elftalcode: ")
     positie = input("Positie: ")
-    leeftijd = int(input("Leeftijd: "))
 
     verbinding = maak_verbinding()
     cursor = verbinding.cursor()
@@ -189,6 +233,25 @@ def toon_gemiddelde_leeftijd_per_elftal():
             print(resultaat[0], round(resultaat[1], 1))
 
 
+def kies_speler_van_de_maand():
+    verbinding = maak_verbinding()
+    cursor = verbinding.cursor()
+
+    cursor.execute("""
+    SELECT naam, elftal
+    FROM speler
+    """)
+
+    spelers = cursor.fetchall()
+    verbinding.close()
+
+    if len(spelers) == 0:
+        print("Er zijn geen spelers om uit te kiezen")
+    else:
+        speler = random.choice(spelers)
+        print("Speler van de maand:", speler[0], "-", speler[1])
+
+
 def toon_sessiestatistieken():
     print("Elftallen toegevoegd:", aantal_elftallen_toegevoegd)
     print("Spelers toegevoegd:", aantal_spelers_toegevoegd)
@@ -219,6 +282,9 @@ def start_elftalbeheer():
 
         elif keuze == 6:
             toon_gemiddelde_leeftijd_per_elftal()
+
+        elif keuze == 7:
+            kies_speler_van_de_maand()
 
         elif keuze == 0:
             toon_sessiestatistieken()

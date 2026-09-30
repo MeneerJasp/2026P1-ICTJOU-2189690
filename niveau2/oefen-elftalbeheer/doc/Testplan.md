@@ -96,9 +96,9 @@ De speler wordt niet toegevoegd en de melding wordt weergegeven.
 De speler wordt verwijderd en de melding `Speler is verwijderd` wordt getoond.
 
 **Werkelijk resultaat:**
-Nog uitvoeren.
+De speler wordt verwijderd en de melding `Speler is verwijderd` wordt weergegeven.
 
-**Resultaat:** Nog uitvoeren
+**Resultaat:** Geslaagd
 
 ---
 
@@ -116,9 +116,9 @@ Nog uitvoeren.
 Er wordt geen speler verwijderd en de melding `Speler niet gevonden` wordt getoond.
 
 **Werkelijk resultaat:**
-Nog uitvoeren.
+De melding `Speler niet gevonden` wordt weergegeven en er wordt geen speler verwijderd.
 
-**Resultaat:** Nog uitvoeren
+**Resultaat:** Geslaagd
 
 ---
 
@@ -138,9 +138,9 @@ Nog uitvoeren.
 Het systeem toont dat er 1 elftal is toegevoegd, 1 speler is toegevoegd en 1 speler is verwijderd.
 
 **Werkelijk resultaat:**
-Nog uitvoeren.
+Het systeem toont 1 toegevoegd elftal, 1 toegevoegde speler en 1 verwijderde speler.
 
-**Resultaat:** Nog uitvoeren
+**Resultaat:** Geslaagd
 
 ---
 
@@ -157,9 +157,9 @@ Nog uitvoeren.
 Alle sessietellers tonen 0.
 
 **Werkelijk resultaat:**
-Nog uitvoeren.
+Alle sessietellers tonen 0.
 
-**Resultaat:** Nog uitvoeren
+**Resultaat:** Geslaagd
 
 ---
 
@@ -177,9 +177,9 @@ Nog uitvoeren.
 De gemiddelde leeftijd van het elftal wordt als `15.0` getoond.
 
 **Werkelijk resultaat:**
-Nog uitvoeren.
+De gemiddelde leeftijd wordt als `15.0` getoond.
 
-**Resultaat:** Nog uitvoeren
+**Resultaat:** Geslaagd
 
 ---
 
@@ -197,7 +197,120 @@ Nog uitvoeren.
 Bij het elftal wordt `Geen spelers` getoond.
 
 **Werkelijk resultaat:**
-Nog uitvoeren.
+Bij het elftal wordt `Geen spelers` getoond.
 
-**Resultaat:** Nog uitvoeren
+**Resultaat:** Geslaagd
+
+---
+
+## Testscenario 11 - Bestaand elftal opnieuw toevoegen
+
+**Doel:** Controleren of een bestaande elftalcode niet opnieuw kan worden toegevoegd.
+
+**Stappen:**
+
+1. Kies `Elftal toevoegen`.
+2. Voer als elftalcode `JO13-1` in.
+3. Vul de overige gegevens in.
+
+**Verwacht resultaat:**
+Het elftal wordt niet toegevoegd en de melding `Elftal bestaat al` wordt weergegeven.
+
+**Werkelijk resultaat:**
+Het elftal wordt niet toegevoegd en de melding `Elftal bestaat al` wordt weergegeven.
+
+**Resultaat:** Geslaagd na bugfix
+
+---
+
+## Testscenario 12 - Elftalsuggestie
+
+**Doel:** Controleren of een passend elftal wordt voorgesteld.
+
+**Stappen:**
+
+1. Kies `Speler toevoegen`.
+2. Voer een naam in.
+3. Voer leeftijd `14` in.
+
+**Verwacht resultaat:**
+Het systeem toont `Voorgesteld elftal: JO15-1`.
+
+**Werkelijk resultaat:**
+Het systeem toont `Voorgesteld elftal: JO15-1`.
+
+**Resultaat:** Geslaagd
+
+---
+
+## Testscenario 13 - Geen passende elftalsuggestie
+
+**Doel:** Controleren wat er gebeurt wanneer geen passend elftal bestaat.
+
+**Stappen:**
+
+1. Kies `Speler toevoegen`.
+2. Voer een naam in.
+3. Voer leeftijd `20` in.
+
+**Verwacht resultaat:**
+Het systeem toont `Geen passend elftal gevonden`.
+
+**Werkelijk resultaat:**
+Het systeem toont `Geen passend elftal gevonden`.
+
+**Resultaat:** Geslaagd
+
+---
+
+## Testscenario 14 - Speler van de maand
+
+**Doel:** Controleren of willekeurig een bestaande speler wordt gekozen.
+
+**Stappen:**
+
+1. Kies `Speler van de maand`.
+2. Bekijk de gekozen speler.
+
+**Verwacht resultaat:**
+Het systeem toont een bestaande speler met het bijbehorende elftal.
+
+**Werkelijk resultaat:**
+Het systeem toont een bestaande speler met het bijbehorende elftal.
+
+**Resultaat:** Geslaagd
+
+---
+
+## Testscenario 15 - Speler van de maand zonder spelers
+
+**Doel:** Controleren wat er gebeurt wanneer er geen spelers zijn.
+
+**Stappen:**
+
+1. Zorg dat de tabel `speler` leeg is.
+2. Kies `Speler van de maand`.
+
+**Verwacht resultaat:**
+Het systeem toont `Er zijn geen spelers om uit te kiezen`.
+
+**Werkelijk resultaat:**
+Het systeem toont `Er zijn geen spelers om uit te kiezen`.
+
+**Resultaat:** Geslaagd
+
+---
+
+## Feedback klasgenoot
+
+**Uitgevoerd scenario:** [invullen]
+
+**Naam klasgenoot:** [invullen]
+
+**Feedback:**
+[invullen]
+
+**Verwerking feedback:**
+[invullen]
+
 ```

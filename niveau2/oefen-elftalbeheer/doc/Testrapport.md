@@ -1,6 +1,9 @@
 ```md
 # Testrapport Elftalbeheer
 
+* **Uitgevoerd op:** 30 september 2026
+* **Door:** ChatGPT (geautomatiseerde testuitvoering)
+
 ## Testscenario 1 - Elftal en speler toevoegen
 
 **Doel:** Controleren of een elftal en speler kunnen worden toegevoegd.
@@ -206,7 +209,125 @@ Het systeem toont `Geen spelers`.
 
 ---
 
+## Testscenario 11 - Bestaand elftal opnieuw toevoegen
+
+**Doel:** Controleren of een bestaande elftalcode niet opnieuw kan worden toegevoegd.
+
+**Stappen:**
+
+1. Probeer `JO13-1` opnieuw toe te voegen.
+2. Bekijk het resultaat.
+
+**Verwacht resultaat:**
+Het elftal wordt niet opnieuw toegevoegd.
+
+**Werkelijk resultaat:**
+Na de bugfix wordt de melding `Elftal bestaat al` weergegeven en blijft de database ongewijzigd.
+
+**Resultaat:** Geslaagd na bugfix
+
+---
+
+## Testscenario 12 - Elftalsuggestie
+
+**Doel:** Controleren of een passend elftal wordt voorgesteld.
+
+**Stappen:**
+
+1. Voer bij een nieuwe speler leeftijd `14` in.
+2. Bekijk de suggestie.
+
+**Verwacht resultaat:**
+Het systeem stelt `JO15-1` voor.
+
+**Werkelijk resultaat:**
+Het systeem toont `Voorgesteld elftal: JO15-1`.
+
+**Resultaat:** Geslaagd
+
+---
+
+## Testscenario 13 - Geen passende elftalsuggestie
+
+**Doel:** Controleren wat er gebeurt als geen passend elftal bestaat.
+
+**Stappen:**
+
+1. Voer bij een nieuwe speler leeftijd `20` in.
+2. Bekijk de suggestie.
+
+**Verwacht resultaat:**
+Er wordt geen passend elftal gevonden.
+
+**Werkelijk resultaat:**
+Het systeem toont `Geen passend elftal gevonden`.
+
+**Resultaat:** Geslaagd
+
+---
+
+## Testscenario 14 - Speler van de maand
+
+**Doel:** Controleren of een bestaande speler willekeurig wordt gekozen.
+
+**Stappen:**
+
+1. Kies `Speler van de maand`.
+2. Bekijk het resultaat.
+
+**Verwacht resultaat:**
+Een bestaande speler wordt weergegeven.
+
+**Werkelijk resultaat:**
+Een bestaande speler met het bijbehorende elftal wordt weergegeven.
+
+**Resultaat:** Geslaagd
+
+---
+
+## Testscenario 15 - Speler van de maand zonder spelers
+
+**Doel:** Controleren wat er gebeurt als er geen spelers zijn.
+
+**Stappen:**
+
+1. Gebruik een lege tabel `speler`.
+2. Kies `Speler van de maand`.
+
+**Verwacht resultaat:**
+Het systeem geeft aan dat er geen spelers zijn.
+
+**Werkelijk resultaat:**
+Het systeem toont `Er zijn geen spelers om uit te kiezen`.
+
+**Resultaat:** Geslaagd
+
+---
+
+# Bugfix-sprint
+
+## Bestaand elftal opnieuw toevoegen
+
+Bij de oorspronkelijke code veroorzaakte het opnieuw toevoegen van `JO13-1` een `UNIQUE constraint failed` op `elftal.elftalcode`.
+
+De functie `voeg_elftal_toe()` is aangepast zodat eerst wordt gecontroleerd of de elftalcode al bestaat.
+
+**Hertest:** Testscenario 11 opnieuw uitgevoerd.
+
+**Resultaat hertest:** Geslaagd
+
+---
+
 # Conclusie
 
-Alle testscenario's zijn geslaagd. De functies voor toevoegen, zoeken, verwijderen, leeftijdscontrole, sessiestatistieken en gemiddelde leeftijd werken volgens het verwachte gedrag.
+Alle testscenario's zijn geslaagd. De bestaande functies en de nieuwe functies voor de elftalsuggestie en speler van de maand werken volgens het verwachte gedrag.
+
+## Feedback klasgenoot
+
+**Naam klasgenoot:** [invullen]
+
+**Gecontroleerd scenario:** [invullen]
+
+**Feedback:**
+[invullen]
 ```

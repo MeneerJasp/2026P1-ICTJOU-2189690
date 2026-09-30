@@ -248,3 +248,23 @@ Als een elftal geen spelers heeft, toont het systeem dat er geen spelers zijn.
 3. Medewerker kiest voor afsluiten.
 4. Systeem toont de sessiestatistieken.
 5. Systeem sluit de applicatie af.
+
+# Ontwerp
+
+## Speler van de maand
+
+### Functie
+
+`kies_speler_van_de_maand()`
+
+### Doel
+
+Willekeurig één bestaande speler kiezen als speler van de maand.
+
+### Verwerking
+
+1. Haal alle spelers uit de database op.
+2. Controleer of er spelers zijn.
+3. Kies met `random.choice()` willekeurig één speler.
+4. Toon de naam en het elftal van de gekozen speler.
+5. Als er geen spelers zijn, toon dan een melding.

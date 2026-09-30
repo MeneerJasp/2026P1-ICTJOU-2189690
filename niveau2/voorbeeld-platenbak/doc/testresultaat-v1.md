@@ -32,3 +32,50 @@ Getroffen functies:
 * `zoek_tracks_op_criteria_uit_database`
 * `haal_genreoverzicht_op_uit_database`
 * `track_bestaat_in_database`
+
+---
+
+## Nieuwe testuitvoering
+
+* **Uitgevoerd op:** 30 september 2026
+* **Door:** ChatGPT (geautomatiseerde testuitvoering)
+
+## Resultaten
+
+| Testcase | Resultaat | Waarneming | Afwijking |
+|---|---|---|---|
+| Nieuwe track toevoegen | Geslaagd | `Frozen Flame is toegevoegd` | Geen |
+| Track toevoegen met onbekende artiest | Geslaagd | Track wordt niet toegevoegd | Geen |
+| Track toevoegen met onbekend genre | Geslaagd | Track wordt niet toegevoegd | Geen |
+| Statistieken tonen | Geslaagd | 55 tracks, gemiddelde duur 303.3454545454546 seconden en totale duur 16684 seconden | Geen |
+| Artiesten per land bekijken | Geslaagd | Nederland 6, Verenigd Koninkrijk 12, USA 9, Jamaica 1 en Frankrijk 1 | Geen |
+| Genreoverzicht bekijken | Geslaagd na bugfix | Alle 10 genres worden weergegeven | `Folk` en `Soul` werden eerst niet weergegeven |
+| Sessiestatistieken bekijken | Geslaagd | Na één toevoeging staat de teller op 1 | Geen |
+| Nieuw genre toevoegen | Geslaagd | `Techno is toegevoegd` | Geen |
+| Bestaand genre toevoegen | Geslaagd | `Genre bestaat al` | Geen |
+| Ongebruikt genre verwijderen | Geslaagd | `Techno is verwijderd` | Geen |
+| Genre met tracks verwijderen | Geslaagd | `Rock` wordt niet verwijderd | Geen |
+| Niet-bestaand genre verwijderen | Geslaagd | `Genre bestaat niet` | Geen |
+
+## Bugfix-sprint en hertest
+
+Bij het testen van het genreoverzicht werden alleen genres weergegeven waar minimaal één track aan gekoppeld was. `Folk` en `Soul` ontbraken daardoor.
+
+De query voor het genreoverzicht is aangepast met een `LEFT JOIN`, zodat ook genres zonder tracks worden weergegeven.
+
+Na de hertest worden alle 10 genres weergegeven.
+
+**Resultaat hertest:** Geslaagd
+
+## Conclusie nieuwe testuitvoering
+
+Alle uitgevoerde scenario's zijn na de bugfix geslaagd. De bestaande functies en de nieuwe functies voor het beheren van genres werken volgens het verwachte gedrag.
+
+## Feedback klasgenoot
+
+**Naam klasgenoot:** [invullen]
+
+**Gecontroleerd scenario:** [invullen]
+
+**Feedback:**
+[invullen]

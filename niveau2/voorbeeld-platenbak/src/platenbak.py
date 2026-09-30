@@ -21,6 +21,8 @@ def toon_menu():
     print("6. Artiesten per land bekijken")
     print("7. Genreoverzicht bekijken")
     print("8. Sessiestatistieken bekijken")
+    print("9. Genre toevoegen")
+    print("10. Genre verwijderen")
     print("0. Afsluiten")
 
 
@@ -159,6 +161,62 @@ def bestaat_genre(genre):
     return resultaat is not None
 
 
+def voeg_genre_toe(verbinding):
+    naam = input("Naam genre: ")
+    omschrijving = input("Omschrijving: ")
+
+    cursor = verbinding.cursor()
+
+    cursor.execute("""
+    SELECT naam
+    FROM genre
+    WHERE naam = ?
+    """, (naam,))
+
+    if cursor.fetchone() is not None:
+        print("Genre bestaat al")
+    else:
+        cursor.execute("""
+        INSERT INTO genre (naam, omschrijving)
+        VALUES (?, ?)
+        """, (naam, omschrijving))
+
+        print(f"{naam} is toegevoegd")
+
+
+def verwijder_genre(verbinding):
+    naam = input("Naam genre: ")
+    cursor = verbinding.cursor()
+
+    cursor.execute("""
+    SELECT naam
+    FROM genre
+    WHERE naam = ?
+    """, (naam,))
+
+    if cursor.fetchone() is None:
+        print("Genre bestaat niet")
+        return
+
+    cursor.execute("""
+    SELECT COUNT(*)
+    FROM track
+    WHERE genre = ?
+    """, (naam,))
+
+    aantal_tracks = cursor.fetchone()[0]
+
+    if aantal_tracks > 0:
+        print("Genre kan niet worden verwijderd omdat er tracks aan gekoppeld zijn")
+    else:
+        cursor.execute("""
+        DELETE FROM genre
+        WHERE naam = ?
+        """, (naam,))
+
+        print(f"{naam} is verwijderd")
+
+
 def zoek_tracks():
     jaar = input("Vanaf welk jaar: ")
     genre = input("Genre: ")
@@ -246,9 +304,11 @@ def haal_genreoverzicht_op_uit_database(verbinding):
     cursor = verbinding.cursor()
 
     cursor.execute("""
-    SELECT genre, COUNT(*)
-    FROM track
-    GROUP BY genre
+    SELECT genre.naam, COUNT(track.titel)
+    FROM genre
+    LEFT JOIN track
+    ON genre.naam = track.genre
+    GROUP BY genre.naam
     """)
 
     genres = cursor.fetchall()
@@ -306,6 +366,12 @@ def start_platenbak():
 
         elif keuze == 8:
             toon_sessiestatistieken(aantal_tracks_toegevoegd)
+
+        elif keuze == 9:
+            voeg_genre_toe(verbinding)
+
+        elif keuze == 10:
+            verwijder_genre(verbinding)
 
         elif keuze == 0:
             quit()
