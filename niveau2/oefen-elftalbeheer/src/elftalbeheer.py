@@ -23,6 +23,7 @@ def toon_menu():
     print("5. Speler verwijderen")
     print("6. Gemiddelde leeftijd per elftal")
     print("7. Speler van de maand")
+    print("8. Leeftijdscontrole")
     print("0. Afsluiten")
 
 
@@ -115,8 +116,19 @@ def voeg_speler_toe():
 
     resultaat = cursor.fetchone()
 
+    cursor.execute("""
+    SELECT naam
+    FROM positie
+    WHERE naam = ?
+    """, (positie,))
+
+    bestaande_positie = cursor.fetchone()
+
     if resultaat is None:
         print("Elftal bestaat niet")
+
+    elif bestaande_positie is None:
+        print("Positie bestaat niet")
 
     elif leeftijd > resultaat[0]:
         print("Speler is te oud voor dit elftal")
@@ -252,6 +264,31 @@ def kies_speler_van_de_maand():
         print("Speler van de maand:", speler[0], "-", speler[1])
 
 
+def controleer_leeftijden():
+    verbinding = maak_verbinding()
+    cursor = verbinding.cursor()
+
+    cursor.execute("""
+    SELECT speler.naam,
+           speler.leeftijd,
+           elftal.elftalcode,
+           elftal.maximumleeftijd
+    FROM speler
+    INNER JOIN elftal
+    ON speler.elftal = elftal.elftalcode
+    WHERE speler.leeftijd > elftal.maximumleeftijd
+    """)
+
+    spelers = cursor.fetchall()
+    verbinding.close()
+
+    if len(spelers) == 0:
+        print("Geen spelers met een te hoge leeftijd gevonden")
+    else:
+        for speler in spelers:
+            print(speler)
+
+
 def toon_sessiestatistieken():
     print("Elftallen toegevoegd:", aantal_elftallen_toegevoegd)
     print("Spelers toegevoegd:", aantal_spelers_toegevoegd)
@@ -285,6 +322,9 @@ def start_elftalbeheer():
 
         elif keuze == 7:
             kies_speler_van_de_maand()
+
+        elif keuze == 8:
+            controleer_leeftijden()
 
         elif keuze == 0:
             toon_sessiestatistieken()

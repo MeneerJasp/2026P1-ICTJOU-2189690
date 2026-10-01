@@ -301,6 +301,67 @@ Het systeem toont `Er zijn geen spelers om uit te kiezen`.
 
 ---
 
+## Testscenario 16 - Ongeldige positie bij speler toevoegen
+
+**Doel:** Controleren of alleen vaste posities gebruikt kunnen worden.
+
+**Stappen:**
+
+1. Kies `Speler toevoegen`.
+2. Voer een geldige naam, leeftijd en bestaand elftal in.
+3. Voer als positie `BestaatNiet` in.
+
+**Verwacht resultaat:**
+De speler wordt niet toegevoegd en het systeem toont `Positie bestaat niet`.
+
+**Werkelijk resultaat:**
+De speler wordt niet toegevoegd en het systeem toont `Positie bestaat niet`.
+
+**Resultaat:** Geslaagd
+
+---
+
+## Testscenario 17 - Leeftijdscontrole zonder afwijkingen
+
+**Doel:** Controleren of de volledige leeftijdscontrole werkt als alle spelers bij hun elftal passen.
+
+**Stappen:**
+
+1. Gebruik de standaard testdata.
+2. Kies `Leeftijdscontrole`.
+
+**Verwacht resultaat:**
+Het systeem toont `Geen spelers met een te hoge leeftijd gevonden`.
+
+**Werkelijk resultaat:**
+Het systeem toont `Geen spelers met een te hoge leeftijd gevonden`.
+
+**Resultaat:** Geslaagd
+
+---
+
+## Testscenario 18 - Leeftijdscontrole met afwijking
+
+**Doel:** Controleren of de volledige leeftijdscontrole een te oude speler vindt.
+
+**Preconditie:**
+Er staat voor deze test een speler van 14 jaar in `JO13-1`.
+
+**Stappen:**
+
+1. Kies `Leeftijdscontrole`.
+2. Bekijk het resultaat.
+
+**Verwacht resultaat:**
+De speler van 14 jaar in `JO13-1` wordt weergegeven als afwijking.
+
+**Werkelijk resultaat:**
+De speler van 14 jaar in `JO13-1` wordt weergegeven als afwijking.
+
+**Resultaat:** Geslaagd
+
+---
+
 ## Feedback klasgenoot
 
 **Uitgevoerd scenario:** [invullen]

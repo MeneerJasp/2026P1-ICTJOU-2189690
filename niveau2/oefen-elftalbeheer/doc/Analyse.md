@@ -24,6 +24,11 @@ VV Finecce wil een applicatie om elftallen en spelers centraal te beheren. De ap
 | US14 | Could | Als medewerker wil ik een seizoenslabel kunnen gebruiken, zodat ik gegevens van eerdere seizoenen kan terugkijken. |
 | US15 | Could | Als medewerker wil ik een melding krijgen wanneer een elftal te weinig basisspelers heeft, zodat ik weet wanneer een elftal niet genoeg spelers heeft voor een wedstrijdselectie. |
 
+
+## Integratiecheck
+
+De `Must`-user stories US1 t/m US8 zijn gerealiseerd. Van de `Could`-user stories zijn US9, US10 en US12 gerealiseerd. US11, US13, US14 en US15 blijven mogelijke vervolgfunctionaliteit en zijn niet onderdeel van de huidige implementatie.
+
 ## User concerns
 
 | Nr. | User concern |
@@ -70,7 +75,7 @@ Als de code al bestaat of gegevens ongeldig zijn, wordt het elftal niet opgeslag
 5. Systeem slaat de speler op.
 
 **Uitzondering:**  
-Als de speler te oud is voor het elftal, wordt de speler niet toegevoegd.
+Als het elftal of de positie niet bestaat, of als de speler te oud is voor het elftal, wordt de speler niet toegevoegd.
 
 ---
 
@@ -268,3 +273,20 @@ Willekeurig één bestaande speler kiezen als speler van de maand.
 3. Kies met `random.choice()` willekeurig één speler.
 4. Toon de naam en het elftal van de gekozen speler.
 5. Als er geen spelers zijn, toon dan een melding.
+
+## Leeftijdscontrole
+
+### Functie
+
+`controleer_leeftijden()`
+
+### Doel
+
+Controleren of bestaande spelers ouder zijn dan de maximumleeftijd van hun elftal.
+
+### Verwerking
+
+1. Koppel de spelers aan hun elftal.
+2. Vergelijk de leeftijd van iedere speler met de maximumleeftijd van het elftal.
+3. Toon de spelers die te oud zijn.
+4. Als er geen afwijkingen zijn, toon dan een melding.
