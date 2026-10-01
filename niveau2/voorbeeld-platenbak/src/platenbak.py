@@ -23,6 +23,8 @@ def toon_menu():
     print("8. Sessiestatistieken bekijken")
     print("9. Genre toevoegen")
     print("10. Genre verwijderen")
+    print("11. Track verwijderen")
+    print("12. Playlist samenstellen")
     print("0. Afsluiten")
 
 
@@ -161,6 +163,87 @@ def bestaat_genre(genre):
     return resultaat is not None
 
 
+def track_bestaat_in_database(verbinding, artiest, titel):
+    cursor = verbinding.cursor()
+
+    cursor.execute("""
+    SELECT titel
+    FROM track
+    WHERE artiest = ? AND titel = ?
+    """, (artiest, titel))
+
+    resultaat = cursor.fetchone()
+    return resultaat is not None
+
+
+def verwijder_track_uit_database(verbinding, artiest, titel):
+    cursor = verbinding.cursor()
+
+    cursor.execute("""
+    DELETE FROM track
+    WHERE artiest = ? AND titel = ?
+    """, (artiest, titel))
+
+
+def verwijder_track(verbinding):
+    artiest = input("Artiest: ")
+    titel = input("Titel: ")
+
+    if track_bestaat_in_database(verbinding, artiest, titel):
+        verwijder_track_uit_database(verbinding, artiest, titel)
+        print(f"{titel} is verwijderd")
+        return True
+    else:
+        print("Track bestaat niet")
+        return False
+
+
+def toon_track_info(track):
+    print_tracks(track)
+
+
+def stel_playlist_samen(verbinding):
+    minuten = int(input("Gewenste tijd in minuten: "))
+
+    if minuten <= 0:
+        print("Tijd moet groter zijn dan 0")
+        return
+
+    gewenste_duur = minuten * 60
+    cursor = verbinding.cursor()
+
+    cursor.execute("""
+    SELECT artiest, titel, genre, duur, jaar
+    FROM track
+    ORDER BY RANDOM()
+    """)
+
+    tracks = cursor.fetchall()
+    totale_duur = 0
+
+    for track in tracks:
+        if totale_duur >= gewenste_duur:
+            break
+
+        toon_track_info(track)
+        totale_duur += track[3]
+
+    print("Totale duur playlist:", totale_duur, "seconden")
+
+
+def zoek_tracks_op_criteria_uit_database(verbinding, genre, jaar_min):
+    cursor = verbinding.cursor()
+
+    cursor.execute("""
+    SELECT artiest, titel, genre, duur, jaar
+    FROM track
+    WHERE jaar >= ? AND genre = ?
+    """, (jaar_min, genre))
+
+    tracks = cursor.fetchall()
+    return tracks
+
+
 def voeg_genre_toe(verbinding):
     naam = input("Naam genre: ")
     omschrijving = input("Omschrijving: ")
@@ -217,21 +300,11 @@ def verwijder_genre(verbinding):
         print(f"{naam} is verwijderd")
 
 
-def zoek_tracks():
+def zoek_tracks(verbinding):
     jaar = input("Vanaf welk jaar: ")
     genre = input("Genre: ")
 
-    verbinding = sqlite3.connect(DATABASE)
-    cursor = verbinding.cursor()
-
-    cursor.execute("""
-    SELECT artiest, titel, genre, duur, jaar
-    FROM track
-    WHERE jaar >= ? AND genre = ?
-    """, (jaar, genre))
-
-    tracks = cursor.fetchall()
-    verbinding.close()
+    tracks = zoek_tracks_op_criteria_uit_database(verbinding, genre, jaar)
 
     if len(tracks) == 0:
         print("Er zijn geen tracks gevonden")
@@ -304,7 +377,7 @@ def haal_genreoverzicht_op_uit_database(verbinding):
     cursor = verbinding.cursor()
 
     cursor.execute("""
-    SELECT genre.naam, COUNT(track.titel)
+    SELECT genre.naam, COUNT(track.titel), COALESCE(SUM(track.duur), 0)
     FROM genre
     LEFT JOIN track
     ON genre.naam = track.genre
@@ -321,11 +394,13 @@ def toon_genreoverzicht(verbinding):
     for genre in genres:
         print("Genre:", genre[0])
         print("Aantal tracks:", genre[1])
+        print("Totale duur:", genre[2], "seconden")
         print("###########################")
 
 
-def toon_sessiestatistieken(aantal_tracks_toegevoegd):
+def toon_sessiestatistieken(aantal_tracks_toegevoegd, aantal_tracks_verwijderd):
     print("Aantal tracks toegevoegd deze sessie:", aantal_tracks_toegevoegd)
+    print("Aantal tracks verwijderd deze sessie:", aantal_tracks_verwijderd)
 
 
 def start_platenbak():
@@ -335,6 +410,7 @@ def start_platenbak():
 
     keuze = -1
     aantal_tracks_toegevoegd = 0
+    aantal_tracks_verwijderd = 0
 
     while keuze != 0:
         toon_menu()
@@ -350,7 +426,7 @@ def start_platenbak():
             toon_tracks_all()
 
         elif keuze == 3:
-            zoek_tracks()
+            zoek_tracks(verbinding)
 
         elif keuze == 4:
             voeg_artiest_toe()
@@ -365,7 +441,10 @@ def start_platenbak():
             toon_genreoverzicht(verbinding)
 
         elif keuze == 8:
-            toon_sessiestatistieken(aantal_tracks_toegevoegd)
+            toon_sessiestatistieken(
+                aantal_tracks_toegevoegd,
+                aantal_tracks_verwijderd
+            )
 
         elif keuze == 9:
             voeg_genre_toe(verbinding)
@@ -373,8 +452,21 @@ def start_platenbak():
         elif keuze == 10:
             verwijder_genre(verbinding)
 
+        elif keuze == 11:
+            track_verwijderd = verwijder_track(verbinding)
+
+            if track_verwijderd:
+                aantal_tracks_verwijderd += 1
+
+        elif keuze == 12:
+            stel_playlist_samen(verbinding)
+
         elif keuze == 0:
-            quit()
+            toon_sessiestatistieken(
+                aantal_tracks_toegevoegd,
+                aantal_tracks_verwijderd
+            )
+            print("Programma afgesloten")
 
         else:
             print("Keuze is ongeldig")

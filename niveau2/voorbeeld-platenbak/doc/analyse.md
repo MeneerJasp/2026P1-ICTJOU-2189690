@@ -82,6 +82,80 @@
 5. Het systeem verwijdert het genre als er geen tracks aan gekoppeld zijn.
 
 
+### UC3: Tracks zoeken
+
+**Actor:** DJ
+
+**Beschrijving:**
+
+1. De DJ kiest "Tracks zoeken".
+2. De DJ voert een minimaal jaar en een genre in.
+3. Het systeem zoekt tracks die aan beide voorwaarden voldoen.
+4. Het systeem toont de gevonden tracks.
+
+**Uitzondering:**
+Als er geen tracks voldoen, toont het systeem `Er zijn geen tracks gevonden`.
+
+### UC7: Artiest toevoegen
+
+**Actor:** DJ
+
+**Beschrijving:**
+
+1. De DJ kiest "Artiest toevoegen".
+2. De DJ voert de naam en het land van de artiest in.
+3. Het systeem slaat de artiest op.
+4. Het systeem bevestigt de toevoeging.
+
+### UC8: Track verwijderen
+
+**Actor:** DJ
+
+**Beschrijving:**
+
+1. De DJ kiest "Track verwijderen".
+2. De DJ voert de artiest en titel in.
+3. Het systeem controleert of de track bestaat.
+4. Het systeem verwijdert de track.
+
+**Uitzondering:**
+Als de track niet bestaat, toont het systeem `Track bestaat niet`.
+
+### UC9: Playlist samenstellen
+
+**Actor:** DJ
+
+**Beschrijving:**
+
+1. De DJ kiest "Playlist samenstellen".
+2. De DJ voert de gewenste tijd in minuten in.
+3. Het systeem kiest tracks in een willekeurige volgorde.
+4. Het systeem toont tracks totdat de gewenste tijd is bereikt of overschreden.
+5. Het systeem toont de totale duur van de playlist.
+
+**Uitzondering:**
+Als de tijd 0 of lager is, toont het systeem `Tijd moet groter zijn dan 0`.
+
+### UC10: Statistieken bekijken
+
+**Actor:** DJ
+
+**Beschrijving:**
+
+1. De DJ kiest een statistiek uit het menu.
+2. Het systeem haalt de benodigde gegevens uit de database.
+3. Het systeem toont de statistieken.
+
+### UC11: Genreoverzicht bekijken
+
+**Actor:** DJ
+
+**Beschrijving:**
+
+1. De DJ kiest "Genreoverzicht bekijken".
+2. Het systeem groepeert de collectie per genre.
+3. Het systeem toont per genre het aantal tracks en de totale duur.
+
 ## User concerns
 
 - **C1. Reliability:** Gegevens moeten persistent worden opgeslagen in een lokale database zodat ze bewaard blijven na het afsluiten.

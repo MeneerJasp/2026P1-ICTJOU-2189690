@@ -79,7 +79,7 @@ Voor alle testcases wordt de volgende voorbereiding verwacht:
 
 ---
 
-## UC2: Testen "Statistieken bekijken"
+## UC10: Testen "Statistieken bekijken"
 
 ### Testscenario: Statistieken van de collectie bekijken
 
@@ -101,7 +101,7 @@ Voor alle testcases wordt de volgende voorbereiding verwacht:
 
 ---
 
-## UC3: Testen "Artiesten per land bekijken"
+## UC10: Testen "Artiesten per land bekijken"
 
 ### Testscenario: Artiesten groeperen per land
 
@@ -122,7 +122,7 @@ Voor alle testcases wordt de volgende voorbereiding verwacht:
 
 ---
 
-## UC4: Testen "Genreoverzicht bekijken"
+## UC11: Testen "Genreoverzicht bekijken"
 
 ### Testscenario: Tracks groeperen per genre
 
@@ -136,16 +136,17 @@ Voor alle testcases wordt de volgende voorbereiding verwacht:
 **Verwacht resultaat:**
 * Elk genre wordt één keer weergegeven.
 * Bij ieder genre wordt het aantal tracks binnen dat genre weergegeven.
-* De aantallen komen overeen met de gegevens in de database.
+* Bij ieder genre wordt de totale duur van de tracks weergegeven.
+* De aantallen en totale duur komen overeen met de gegevens in de database.
 
 **Resultaat:**
 * Geslaagd na hertest.
 
 ---
 
-## UC5: Testen "Sessiestatistieken bekijken"
+## UC4: Testen "Sessiestatistieken bekijken"
 
-### Testscenario: Aantal toegevoegde tracks tijdens de sessie bekijken
+### Testscenario: Aantal toegevoegde en verwijderde tracks bij afsluiten
 
 **Precondities:**
 * De artiest `Kayak` bestaat in de database.
@@ -155,17 +156,19 @@ Voor alle testcases wordt de volgende voorbereiding verwacht:
 1. Start de applicatie.
 2. Kies in het menu voor optie 1 ("Track toevoegen").
 3. Voeg de track `Frozen Flame` van `Kayak` toe.
-4. Kies in het menu voor optie 8 ("Sessiestatistieken bekijken").
+4. Verwijder een bestaande track.
+5. Kies in het menu voor optie 0 ("Afsluiten").
 
 **Verwacht resultaat:**
 * Het systeem toont dat tijdens de huidige sessie 1 track is toegevoegd.
+* Het systeem toont dat tijdens de huidige sessie 1 track is verwijderd.
 
 **Resultaat:**
 * Geslaagd.
 
 ---
 
-## UC6: Testen "Genres beheren"
+## UC5 en UC6: Testen "Genres beheren"
 
 ### Testscenario: Nieuw genre toevoegen
 
@@ -252,6 +255,172 @@ Voor alle testcases wordt de volgende voorbereiding verwacht:
 **Verwacht resultaat:**
 * Het systeem toont `Genre bestaat niet`.
 * De database blijft ongewijzigd.
+
+**Resultaat:**
+* Geslaagd.
+
+---
+
+## UC2: Testen "Tracks bekijken"
+
+### Testscenario: Alle tracks bekijken
+
+**Precondities:**
+* De standaard testdata is aanwezig in de database.
+
+**Testscenario:**
+1. Start de applicatie.
+2. Kies in het menu voor optie 2 ("Tracks bekijken").
+
+**Verwacht resultaat:**
+* De tracks worden weergegeven met artiest, titel, genre, duur en jaar.
+
+**Resultaat:**
+* Geslaagd.
+
+---
+
+### Testscenario: Tracks bekijken met lege collectie
+
+**Precondities:**
+* De tabel `track` is leeg.
+
+**Testscenario:**
+1. Kies in het menu voor optie 2 ("Tracks bekijken").
+
+**Verwacht resultaat:**
+* Het systeem toont `Er zijn geen tracks gevonden`.
+
+**Resultaat:**
+* Geslaagd.
+
+---
+
+## UC3: Testen "Tracks zoeken"
+
+### Testscenario: Zoeken met resultaten
+
+**Precondities:**
+* De standaard testdata is aanwezig in de database.
+
+**Testscenario:**
+1. Kies in het menu voor optie 3 ("Tracks zoeken").
+2. Voer als minimaal jaar `1970` in.
+3. Voer als genre `Rock` in.
+
+**Verwacht resultaat:**
+* Alleen Rock-tracks uit 1970 of later worden weergegeven.
+
+**Resultaat:**
+* Geslaagd.
+
+---
+
+### Testscenario: Zoeken zonder resultaten
+
+**Precondities:**
+* De standaard testdata is aanwezig in de database.
+
+**Testscenario:**
+1. Kies in het menu voor optie 3 ("Tracks zoeken").
+2. Voer als minimaal jaar `3000` in.
+3. Voer als genre `Rock` in.
+
+**Verwacht resultaat:**
+* Het systeem toont `Er zijn geen tracks gevonden`.
+
+**Resultaat:**
+* Geslaagd.
+
+---
+
+## UC7: Testen "Artiest toevoegen"
+
+### Testscenario: Nieuwe artiest toevoegen
+
+**Precondities:**
+* De artiest `Test Artiest` bestaat nog niet in de database.
+
+**Testscenario:**
+1. Kies in het menu voor optie 4 ("Artiest toevoegen").
+2. Voer als naam `Test Artiest` in.
+3. Voer als land `Nederland` in.
+
+**Verwacht resultaat:**
+* Het systeem toont `Test Artiest is toegevoegd`.
+* De artiest staat in de database.
+
+**Resultaat:**
+* Geslaagd.
+
+---
+
+## UC8: Testen "Track verwijderen"
+
+### Testscenario: Bestaande track verwijderen
+
+**Precondities:**
+* `Ruthless Queen` van `Kayak` bestaat in de database.
+
+**Testscenario:**
+1. Kies in het menu voor optie 11 ("Track verwijderen").
+2. Voer als artiest `Kayak` in.
+3. Voer als titel `Ruthless Queen` in.
+
+**Verwacht resultaat:**
+* Het systeem toont `Ruthless Queen is verwijderd`.
+* De track staat niet meer in de database.
+
+**Resultaat:**
+* Geslaagd.
+
+---
+
+### Testscenario: Niet-bestaande track verwijderen
+
+**Testscenario:**
+1. Kies in het menu voor optie 11 ("Track verwijderen").
+2. Voer als artiest `Kayak` in.
+3. Voer als titel `BestaatNiet` in.
+
+**Verwacht resultaat:**
+* Het systeem toont `Track bestaat niet`.
+* De database blijft ongewijzigd.
+
+**Resultaat:**
+* Geslaagd.
+
+---
+
+## UC9: Testen "Playlist samenstellen"
+
+### Testscenario: Playlist samenstellen op tijd
+
+**Precondities:**
+* De standaard testdata is aanwezig in de database.
+
+**Testscenario:**
+1. Kies in het menu voor optie 12 ("Playlist samenstellen").
+2. Voer `10` minuten in.
+
+**Verwacht resultaat:**
+* Het systeem toont willekeurige tracks.
+* De totale duur is minimaal 600 seconden wanneer er voldoende tracks beschikbaar zijn.
+
+**Resultaat:**
+* Geslaagd.
+
+---
+
+### Testscenario: Playlist met ongeldige tijd
+
+**Testscenario:**
+1. Kies in het menu voor optie 12 ("Playlist samenstellen").
+2. Voer `0` minuten in.
+
+**Verwacht resultaat:**
+* Het systeem toont `Tijd moet groter zijn dan 0`.
+* Er wordt geen playlist samengesteld.
 
 **Resultaat:**
 * Geslaagd.

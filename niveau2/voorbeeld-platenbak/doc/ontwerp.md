@@ -51,7 +51,7 @@ De applicatie "Platenbak" bestaat uit de volgende functies:
 
 - `haal_genreoverzicht_op_uit_database(verbinding)`: Haalt het
   genre-overzicht op. Hierbij wordt `GROUP BY` gebruikt om de tracks
-  per genre te groeperen.
+  per genre te groeperen en wordt ook de totale duur per genre berekend.
 
 - `track_bestaat_in_database(verbinding, artiest, titel)`: Controleert of
   een track met gegeven artiest en titel bestaat.
@@ -96,19 +96,19 @@ De applicatie "Platenbak" bestaat uit de volgende functies:
 
 - `toon_genreoverzicht(verbinding)`: Toont het genre-overzicht.
 
-- `toon_sessiestatistieken(aantal_tracks_toegevoegd)`: Toont hoeveel
-  tracks tijdens de huidige sessie zijn toegevoegd.
+- `toon_sessiestatistieken(aantal_tracks_toegevoegd, aantal_tracks_verwijderd)`: Toont hoeveel
+  tracks tijdens de huidige sessie zijn toegevoegd en verwijderd.
 
 ### Sessiestatistieken
 
 Tijdens het uitvoeren van de applicatie wordt bijgehouden hoeveel tracks
-zijn toegevoegd. De teller begint bij het starten van de applicatie op 0
-en wordt met 1 verhoogd wanneer een track succesvol wordt toegevoegd.
+zijn toegevoegd en verwijderd. Beide tellers beginnen bij het starten van de applicatie op 0
+en worden met 1 verhoogd wanneer een track succesvol wordt toegevoegd of verwijderd.
 
 De sessiestatistieken worden niet opgeslagen in de database.
 
 ### Hoofdfunctie
 
 - `start_platenbak()`: Start de hoofdloop en handelt gebruikersinvoer af.
-  In deze functie wordt ook de sessieteller voor toegevoegde tracks
+  In deze functie worden ook de sessietellers voor toegevoegde en verwijderde tracks
   bijgehouden.
