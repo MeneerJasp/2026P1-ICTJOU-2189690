@@ -8,7 +8,11 @@ In dit document worden de functionele en non-functionele eisen van de applicatie
 
 | User Story | Prioriteit | Increment |
 |-------------|------------|----------:|
-| [Opstellen User Stories 1 t/m 5] | Must | 1 |
+| **US1.** Als student wil ik een item aan een verlanglijst kunnen toevoegen, zodat ik mijn wensen op één plek kan bijhouden. | Must | 1 |
+| **US2.** Als student wil ik de prijs van een item kunnen aanpassen, zodat mijn verlanglijst actuele prijzen bevat. | Must | 1 |
+| **US3.** Als student wil ik het budget van een verlanglijst kunnen aanpassen, zodat het budget blijft aansluiten bij mijn afspraken. | Must | 1 |
+| **US4.** Als student wil ik een item van een verlanglijst kunnen verwijderen, zodat mijn verlanglijst alleen items bevat die ik nog wil kopen. | Must | 1 |
+| **US5.** Als student wil ik een prioriteit aan een item kunnen geven, zodat ik kan aangeven welke items het belangrijkst zijn. | Should | 1 |
 | **US6.** Als student wil ik kunnen zoeken naar items binnen een specifieke prijsrange, zodat ik gericht iets nuttigs kan kopen van mijn restbudget. | Must | 2 |
 | **US7.** Als student wil ik een maandelijks spaarplan kunnen berekenen voor items, zodat ik weet hoeveel ik opzij moet leggen voor toekomstige aankopen. | Must | 2 |
 | **US8.** Als student wil ik mijn uitgaven per lijst kunnen inzien, inclusief budgetoverschrijdingen, zodat ik mijn financiële doelen bewaak. | Must | 2 |
@@ -24,7 +28,7 @@ In dit document worden de functionele en non-functionele eisen van de applicatie
 ### User concerns
 
 
-- **C1. Data integrity:** [Vul in]
+- **C1. Data integrity:** Winkels en verlanglijsten moeten consistent en herkenbaar worden opgeslagen, zodat dezelfde gegevens niet onder verschillende namen voorkomen en de overzichten betrouwbaar blijven.
 - **C2. Security:** De applicatie moet beschermd worden tegen ongeautoriseerde toegang door het gebruik van een toegangscode.
 - **C3. Security:** Gevoelige gegevens mogen niet onveilig worden opgeslagen of zichtbaar zijn in de broncode.
 - **C4. Security:** De toegangscode moet op een veilige manier worden verwerkt en opgeslagen.
@@ -69,7 +73,23 @@ In dit document worden de functionele en non-functionele eisen van de applicatie
 4. a.  Als er geen items aanwezig zijn in de gekozen verlanglijst, volgt een foutmelding en stopt de use case.
 
 
-[Opstellen Use Case 3]
+### UC3: Lijstbudget aanpassen
+**Actor:** Student  
+**Precondities:**
+- De applicatie is gestart.
+
+**Normale flow:**
+
+1. De student kiest de optie "Pas lijstbudget aan".
+2. Het systeem toont een overzicht van alle verlanglijsten en hun huidige budget.
+3. De student kiest de verlanglijst waarvan het budget aangepast moet worden.
+4. Het systeem vraagt om het nieuwe budget.
+5. De student voert het nieuwe budget in.
+6. Het systeem werkt het budget van de gekozen verlanglijst bij in de database.
+7. Het systeem bevestigt de wijziging.
+
+**Alternatieve flows:**
+2. a. Als er geen verlanglijsten aanwezig zijn, volgt een foutmelding en stopt de use case.
 
 ### UC4: Item verwijderen
 **Actor:** Student  
