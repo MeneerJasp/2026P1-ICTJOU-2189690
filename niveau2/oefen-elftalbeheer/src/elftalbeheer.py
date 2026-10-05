@@ -4,6 +4,7 @@ import sqlite3
 
 DATABASE = "niveau2/oefen-elftalbeheer/db/elftalbeheer.db"
 
+# Tellers voor deze sessie.
 aantal_elftallen_toegevoegd = 0
 aantal_spelers_toegevoegd = 0
 aantal_spelers_verwijderd = 0
@@ -11,7 +12,11 @@ aantal_spelers_verwijderd = 0
 
 def maak_verbinding():
     verbinding = sqlite3.connect(DATABASE)
+
+    # Foreign keys aanzetten.
+    # Zo controleert SQLite of gekoppelde gegevens bestaan.
     verbinding.execute("PRAGMA foreign_keys = ON")
+
     return verbinding
 
 
@@ -43,16 +48,21 @@ def voeg_elftal_toe():
     verbinding = maak_verbinding()
     cursor = verbinding.cursor()
 
+    # Eerst controleren of het elftal al bestaat.
     cursor.execute("""
     SELECT elftalcode
     FROM elftal
     WHERE elftalcode = ?
     """, (elftalcode,))
 
+    # Tip: bij 1 waarde staat er (elftalcode,)
+    # De komma zorgt dat Python dit als tuple ziet.
+
     bestaand_elftal = cursor.fetchone()
 
     if bestaand_elftal is not None:
         print("Elftal bestaat al")
+
     else:
         cursor.execute("""
         INSERT INTO elftal (elftalcode, omschrijving, coach, maximumleeftijd)
@@ -60,7 +70,9 @@ def voeg_elftal_toe():
         """, (elftalcode, omschrijving, coach, maximumleeftijd))
 
         verbinding.commit()
+
         aantal_elftallen_toegevoegd += 1
+
         print("Elftal is toegevoegd")
 
     verbinding.close()
@@ -70,6 +82,7 @@ def geef_elftalsuggestie(leeftijd):
     verbinding = maak_verbinding()
     cursor = verbinding.cursor()
 
+    # Eerst de jongste elftallen bekijken.
     cursor.execute("""
     SELECT elftalcode, maximumleeftijd
     FROM elftal
@@ -82,7 +95,9 @@ def geef_elftalsuggestie(leeftijd):
     teller = 0
     suggestie = None
 
+    # Stoppen zodra er een passend elftal is gevonden.
     while teller < len(elftallen) and suggestie is None:
+
         if leeftijd <= elftallen[teller][1]:
             suggestie = elftallen[teller][0]
 
@@ -108,6 +123,7 @@ def voeg_speler_toe():
     verbinding = maak_verbinding()
     cursor = verbinding.cursor()
 
+    # Maximumleeftijd van het gekozen elftal.
     cursor.execute("""
     SELECT maximumleeftijd
     FROM elftal
@@ -116,6 +132,7 @@ def voeg_speler_toe():
 
     resultaat = cursor.fetchone()
 
+    # Controleren of de positie bestaat.
     cursor.execute("""
     SELECT naam
     FROM positie
@@ -134,10 +151,13 @@ def voeg_speler_toe():
         print("Speler is te oud voor dit elftal")
 
     else:
+
         cursor.execute("""
         INSERT INTO speler (naam, elftal, positie, leeftijd)
         VALUES (?, ?, ?, ?)
         """, (naam, elftal, positie, leeftijd))
+
+        # Tip: placeholders houden invoer en SQL gescheiden.
 
         verbinding.commit()
         aantal_spelers_toegevoegd += 1
@@ -159,6 +179,8 @@ def zoek_speler():
     WHERE naam LIKE ?
     """, ("%" + naam + "%",))
 
+    # Tip: % betekent dat er voor en na de zoekterm nog tekst mag staan.
+
     spelers = cursor.fetchall()
     verbinding.close()
 
@@ -173,10 +195,9 @@ def toon_elftallen():
     verbinding = maak_verbinding()
     cursor = verbinding.cursor()
 
+    # LEFT JOIN laat ook elftallen zonder spelers zien.
     cursor.execute("""
-    SELECT elftal.elftalcode,
-           elftal.omschrijving,
-           speler.naam
+    SELECT elftal.elftalcode, elftal.omschrijving, speler.naam
     FROM elftal
     LEFT JOIN speler
     ON elftal.elftalcode = speler.elftal
@@ -197,6 +218,7 @@ def verwijder_speler():
     verbinding = maak_verbinding()
     cursor = verbinding.cursor()
 
+    # Eerst controleren of de speler bestaat.
     cursor.execute("""
     SELECT naam
     FROM speler
@@ -226,9 +248,10 @@ def toon_gemiddelde_leeftijd_per_elftal():
     verbinding = maak_verbinding()
     cursor = verbinding.cursor()
 
+    # AVG = gemiddelde.
+    # GROUP BY maakt 1 groep per elftal.
     cursor.execute("""
-    SELECT elftal.elftalcode,
-           AVG(speler.leeftijd)
+    SELECT elftal.elftalcode, AVG(speler.leeftijd)
     FROM elftal
     LEFT JOIN speler
     ON elftal.elftalcode = speler.elftal
@@ -239,9 +262,12 @@ def toon_gemiddelde_leeftijd_per_elftal():
     verbinding.close()
 
     for resultaat in resultaten:
+
         if resultaat[1] is None:
             print(resultaat[0], "Geen spelers")
+
         else:
+            # Afronden op 1 decimaal.
             print(resultaat[0], round(resultaat[1], 1))
 
 
@@ -259,8 +285,11 @@ def kies_speler_van_de_maand():
 
     if len(spelers) == 0:
         print("Er zijn geen spelers om uit te kiezen")
+
     else:
+        # Willekeurige speler uit de lijst.
         speler = random.choice(spelers)
+
         print("Speler van de maand:", speler[0], "-", speler[1])
 
 
@@ -268,11 +297,9 @@ def controleer_leeftijden():
     verbinding = maak_verbinding()
     cursor = verbinding.cursor()
 
+    # Spelers tonen die te oud zijn voor hun elftal.
     cursor.execute("""
-    SELECT speler.naam,
-           speler.leeftijd,
-           elftal.elftalcode,
-           elftal.maximumleeftijd
+    SELECT speler.naam, speler.leeftijd, elftal.elftalcode, elftal.maximumleeftijd
     FROM speler
     INNER JOIN elftal
     ON speler.elftal = elftal.elftalcode
@@ -298,6 +325,7 @@ def toon_sessiestatistieken():
 def start_elftalbeheer():
     keuze = -1
 
+    # Hoofdloop van het programma.
     while keuze != 0:
         toon_menu()
         keuze = vraag_keuze()
@@ -334,5 +362,6 @@ def start_elftalbeheer():
             print("Keuze is ongeldig")
 
 
+# Alleen starten als dit bestand direct wordt uitgevoerd.
 if __name__ == '__main__':
     start_elftalbeheer()

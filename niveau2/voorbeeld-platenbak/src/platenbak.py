@@ -6,9 +6,17 @@ DATABASE = "niveau2/voorbeeld-platenbak/db/platenbak.db"
 
 def maak_verbinding():
     verbinding = sqlite3.connect(DATABASE)
+
+    # Rij ook met kolomnaam kunnen gebruiken, bijvoorbeeld rij["naam"].
     verbinding.row_factory = sqlite3.Row
+
+    # Foreign keys aanzetten.
+    # SQLite controleert dan of gekoppelde gegevens bestaan.
     verbinding.execute("PRAGMA foreign_keys = ON")
+
+    # Wijzigingen meteen opslaan.
     verbinding.autocommit = True
+
     return verbinding
 
 
@@ -48,6 +56,9 @@ def voeg_track_toe_aan_database(
     VALUES (?, ?, ?, ?, ?)
     """, (artiest, titel, genre, duur, jaar))
 
+    # Tip: ? zijn placeholders.
+    # Waardes worden apart en op dezelfde volgorde meegegeven.
+
     print(f"{titel} is toegevoegd")
 
 
@@ -58,7 +69,9 @@ def voeg_track_toe(verbinding):
     duur = input("Duur: ")
     jaar = input("Jaar: ")
 
+    # Alleen toevoegen als artiest en genre bestaan.
     if bestaat_artiest(artiest) and bestaat_genre(genre):
+
         voeg_track_toe_aan_database(
             verbinding,
             artiest,
@@ -67,7 +80,9 @@ def voeg_track_toe(verbinding):
             jaar,
             genre
         )
+
         return True
+
     else:
         print("Artiest of genre bestaat niet")
         return False
@@ -83,7 +98,9 @@ def haal_tracks_op_all():
     """)
 
     tracks = cursor.fetchall()
+
     verbinding.close()
+
     return tracks
 
 
@@ -92,12 +109,14 @@ def toon_tracks_all():
 
     if len(tracks) == 0:
         print("Er zijn geen tracks gevonden")
+
     else:
         for track in tracks:
             print_tracks(track)
 
 
 def print_tracks(track):
+    # 1 track tonen.
     print("Artiest:", track[0])
     print("Titel:", track[1])
     print("Genre:", track[2])
@@ -111,6 +130,7 @@ def toon_tracks_artiest(artiest):
 
     if len(tracks) == 0:
         print("Er zijn geen tracks van deze artiest gevonden")
+
     else:
         for track in tracks:
             print_tracks(track)
@@ -126,8 +146,13 @@ def haal_tracks_artiest_op(artiest):
     WHERE artiest = ?
     """, (artiest,))
 
+    # Tip: bij 1 waarde staat er een komma in (artiest,).
+    # Zo weet Python dat dit een tuple is.
+
     tracks = cursor.fetchall()
+
     verbinding.close()
+
     return tracks
 
 
@@ -135,6 +160,7 @@ def bestaat_artiest(artiest):
     verbinding = sqlite3.connect(DATABASE)
     cursor = verbinding.cursor()
 
+    # Kijken of artiest bestaat.
     cursor.execute("""
     SELECT naam
     FROM artiest
@@ -142,8 +168,10 @@ def bestaat_artiest(artiest):
     """, (artiest,))
 
     resultaat = cursor.fetchone()
+
     verbinding.close()
 
+    # True als iets gevonden is, anders False.
     return resultaat is not None
 
 
@@ -151,6 +179,7 @@ def bestaat_genre(genre):
     verbinding = sqlite3.connect(DATABASE)
     cursor = verbinding.cursor()
 
+    # Kijken of genre bestaat.
     cursor.execute("""
     SELECT naam
     FROM genre
@@ -158,6 +187,7 @@ def bestaat_genre(genre):
     """, (genre,))
 
     resultaat = cursor.fetchone()
+
     verbinding.close()
 
     return resultaat is not None
@@ -166,6 +196,7 @@ def bestaat_genre(genre):
 def track_bestaat_in_database(verbinding, artiest, titel):
     cursor = verbinding.cursor()
 
+    # Track zoeken op artiest + titel.
     cursor.execute("""
     SELECT titel
     FROM track
@@ -173,6 +204,7 @@ def track_bestaat_in_database(verbinding, artiest, titel):
     """, (artiest, titel))
 
     resultaat = cursor.fetchone()
+
     return resultaat is not None
 
 
@@ -189,10 +221,15 @@ def verwijder_track(verbinding):
     artiest = input("Artiest: ")
     titel = input("Titel: ")
 
+    # Eerst controleren of de track bestaat.
     if track_bestaat_in_database(verbinding, artiest, titel):
+
         verwijder_track_uit_database(verbinding, artiest, titel)
+
         print(f"{titel} is verwijderd")
+
         return True
+
     else:
         print("Track bestaat niet")
         return False
@@ -209,9 +246,12 @@ def stel_playlist_samen(verbinding):
         print("Tijd moet groter zijn dan 0")
         return
 
+    # Minuten naar seconden.
     gewenste_duur = minuten * 60
+
     cursor = verbinding.cursor()
 
+    # Tracks in willekeurige volgorde ophalen.
     cursor.execute("""
     SELECT artiest, titel, genre, duur, jaar
     FROM track
@@ -219,13 +259,17 @@ def stel_playlist_samen(verbinding):
     """)
 
     tracks = cursor.fetchall()
+
     totale_duur = 0
 
+    # Stoppen zodra de gewenste duur bereikt is.
     for track in tracks:
+
         if totale_duur >= gewenste_duur:
             break
 
         toon_track_info(track)
+
         totale_duur += track[3]
 
     print("Totale duur playlist:", totale_duur, "seconden")
@@ -234,6 +278,7 @@ def stel_playlist_samen(verbinding):
 def zoek_tracks_op_criteria_uit_database(verbinding, genre, jaar_min):
     cursor = verbinding.cursor()
 
+    # Filteren op minimaal jaar en genre.
     cursor.execute("""
     SELECT artiest, titel, genre, duur, jaar
     FROM track
@@ -241,6 +286,7 @@ def zoek_tracks_op_criteria_uit_database(verbinding, genre, jaar_min):
     """, (jaar_min, genre))
 
     tracks = cursor.fetchall()
+
     return tracks
 
 
@@ -250,6 +296,7 @@ def voeg_genre_toe(verbinding):
 
     cursor = verbinding.cursor()
 
+    # Eerst kijken of het genre al bestaat.
     cursor.execute("""
     SELECT naam
     FROM genre
@@ -258,6 +305,7 @@ def voeg_genre_toe(verbinding):
 
     if cursor.fetchone() is not None:
         print("Genre bestaat al")
+
     else:
         cursor.execute("""
         INSERT INTO genre (naam, omschrijving)
@@ -269,8 +317,10 @@ def voeg_genre_toe(verbinding):
 
 def verwijder_genre(verbinding):
     naam = input("Naam genre: ")
+
     cursor = verbinding.cursor()
 
+    # Eerst kijken of het genre bestaat.
     cursor.execute("""
     SELECT naam
     FROM genre
@@ -281,6 +331,7 @@ def verwijder_genre(verbinding):
         print("Genre bestaat niet")
         return
 
+    # Aantal tracks met dit genre tellen.
     cursor.execute("""
     SELECT COUNT(*)
     FROM track
@@ -291,6 +342,7 @@ def verwijder_genre(verbinding):
 
     if aantal_tracks > 0:
         print("Genre kan niet worden verwijderd omdat er tracks aan gekoppeld zijn")
+
     else:
         cursor.execute("""
         DELETE FROM genre
@@ -308,6 +360,7 @@ def zoek_tracks(verbinding):
 
     if len(tracks) == 0:
         print("Er zijn geen tracks gevonden")
+
     else:
         for track in tracks:
             print_tracks(track)
@@ -325,7 +378,9 @@ def voeg_artiest_toe():
     VALUES (?, ?)
     """, (naam, land))
 
+    # Deze verbinding gebruikt geen autocommit.
     verbinding.commit()
+
     verbinding.close()
 
     print(f"{naam} is toegevoegd")
@@ -334,12 +389,14 @@ def voeg_artiest_toe():
 def haal_statistieken_op_uit_database(verbinding):
     cursor = verbinding.cursor()
 
+    # COUNT = aantal, AVG = gemiddelde, SUM = totaal.
     cursor.execute("""
     SELECT COUNT(*), AVG(duur), SUM(duur)
     FROM track
     """)
 
     statistieken = cursor.fetchone()
+
     return statistieken
 
 
@@ -354,6 +411,7 @@ def toon_statistieken(verbinding):
 def haal_landen_op_uit_database(verbinding):
     cursor = verbinding.cursor()
 
+    # Artiesten per land groeperen en tellen.
     cursor.execute("""
     SELECT land, COUNT(*)
     FROM artiest
@@ -361,6 +419,7 @@ def haal_landen_op_uit_database(verbinding):
     """)
 
     landen = cursor.fetchall()
+
     return landen
 
 
@@ -376,6 +435,8 @@ def toon_landen(verbinding):
 def haal_genreoverzicht_op_uit_database(verbinding):
     cursor = verbinding.cursor()
 
+    # LEFT JOIN laat ook genres zonder tracks zien.
+    # COALESCE maakt een lege totale duur 0.
     cursor.execute("""
     SELECT genre.naam, COUNT(track.titel), COALESCE(SUM(track.duur), 0)
     FROM genre
@@ -385,6 +446,7 @@ def haal_genreoverzicht_op_uit_database(verbinding):
     """)
 
     genres = cursor.fetchall()
+
     return genres
 
 
@@ -409,10 +471,13 @@ def start_platenbak():
     print("Welkom bij de Platenbak! Veel plezier met je collectie.")
 
     keuze = -1
+
+    # Tellers beginnen iedere nieuwe sessie op 0.
     aantal_tracks_toegevoegd = 0
     aantal_tracks_verwijderd = 0
 
     while keuze != 0:
+
         toon_menu()
         keuze = vraag_keuze()
 
@@ -466,6 +531,7 @@ def start_platenbak():
                 aantal_tracks_toegevoegd,
                 aantal_tracks_verwijderd
             )
+
             print("Programma afgesloten")
 
         else:
@@ -475,5 +541,6 @@ def start_platenbak():
     verbinding.close()
 
 
+# Alleen automatisch starten als dit bestand zelf wordt uitgevoerd.
 if __name__ == '__main__':
     start_platenbak()

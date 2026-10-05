@@ -1,13 +1,17 @@
 import sqlite3
 
+
+# Verbinding met de database.
 connection = sqlite3.connect(
     "niveau1/voorbeeld-workouttracker/db/workouttracker.db"
 )
 
+# Cursor voor SQL-query's.
 cursor = connection.cursor()
 
 keuze = "" 
 
+# Menu blijft draaien tot X wordt gekozen.
 while keuze.upper() != "X":
 
     print()
@@ -34,6 +38,7 @@ while keuze.upper() != "X":
 
     # 1. Alle workouts tonen
     elif keuze == "1":
+
         cursor.execute(
             """
             SELECT datumtijd, type, duur
@@ -41,6 +46,7 @@ while keuze.upper() != "X":
             """
         )
 
+        # Alle gevonden workouts ophalen.
         workouts = cursor.fetchall()
 
         for workout in workouts:
@@ -48,6 +54,8 @@ while keuze.upper() != "X":
 
     # 2. Alle hardloop workouts
     elif keuze == "2":
+
+        # WHERE filtert op Hardlopen.
         cursor.execute(
             """
             SELECT datumtijd, type, duur
@@ -63,6 +71,7 @@ while keuze.upper() != "X":
 
     # 3. Alle krachttraining workouts
     elif keuze == "3":
+
         cursor.execute(
             """
             SELECT datumtijd, type, duur
@@ -78,6 +87,7 @@ while keuze.upper() != "X":
 
     # 4. Alle andere workouts
     elif keuze == "4":
+
         cursor.execute(
             """
             SELECT datumtijd, type, duur
@@ -119,6 +129,10 @@ while keuze.upper() != "X":
             )
         )
 
+        # Tip: ? zijn placeholders.
+        # De 3 waardes worden op dezelfde volgorde ingevuld.
+
+        # INSERT opslaan.
         connection.commit()
 
         print()
@@ -126,16 +140,21 @@ while keuze.upper() != "X":
 
     # 6. Totale duur van alle workouts
     elif keuze == "6":
+
         cursor.execute("SELECT * FROM Workout")
         workouts = cursor.fetchall()
 
         totale_duur_in_minuten = 0
 
+        # Duur van alle workouts optellen.
         for workout in workouts:
             duur = workout[2]
             totale_duur_in_minuten += duur
 
+        # // deelt door 60 en houdt alleen het aantal volledige uren over.
         uren = totale_duur_in_minuten // 60
+
+        # % geeft de minuten die overblijven nadat de volledige uren eraf zijn.
         minuten = totale_duur_in_minuten % 60
 
         print(
@@ -147,6 +166,7 @@ while keuze.upper() != "X":
         )
 
     #betere versie:
+    # SQL kan het optellen ook zelf doen met SUM.
     #elif keuze == "6":
     #    cursor.execute(
     #        """
@@ -165,6 +185,8 @@ while keuze.upper() != "X":
 
     # 7. Alle unieke workout types
     elif keuze == "7":
+
+        # DISTINCT = geen dubbele types.
         cursor.execute(
             """
             SELECT DISTINCT type

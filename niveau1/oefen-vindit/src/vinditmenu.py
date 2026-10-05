@@ -1,15 +1,18 @@
 import sqlite3
 
 
+# Verbinding met de database.
 connection = sqlite3.connect(
     "niveau1/oefen-vindit/db/vindit.db"
 )
 
+# Cursor voor SQL-query's.
 cursor = connection.cursor()
 
 keuze = ""
 
 
+# Menu blijft draaien tot X wordt gekozen.
 while keuze.upper() != "X":
 
     print()
@@ -50,6 +53,7 @@ while keuze.upper() != "X":
             """
         )
 
+        # Alle resultaten ophalen.
         verkopen = cursor.fetchall()
 
         for verkoop in verkopen:
@@ -93,6 +97,7 @@ while keuze.upper() != "X":
     # 4. Overige verkopen tonen
     elif keuze == "4":
 
+        # Geen kleding en geen boeken.
         cursor.execute(
             """
             SELECT verkoopmoment, categorie, opbrengst
@@ -136,6 +141,9 @@ while keuze.upper() != "X":
             )
         )
 
+        # Tip: ? zijn placeholders voor de waardes in de tuple.
+
+        # INSERT opslaan.
         connection.commit()
 
         print("Verkoop is toegevoegd.")
@@ -155,6 +163,7 @@ while keuze.upper() != "X":
 
         totale_opbrengst = 0
 
+        # Alle opbrengsten bij elkaar optellen.
         for verkoop in verkopen:
 
             opbrengst = float(verkoop[2])
@@ -173,6 +182,7 @@ while keuze.upper() != "X":
     # 7. Alle gebruikte categorieen tonen
     elif keuze == "7":
 
+        # DISTINCT = alleen unieke waardes.
         cursor.execute(
             """
             SELECT DISTINCT categorie
@@ -209,6 +219,7 @@ while keuze.upper() != "X":
 
             verkoopmoment = verkoop[0]
 
+            # Eerste 7 tekens zijn jaar en maand.
             if verkoopmoment[0:7] == maand:
 
                 opbrengst = float(verkoop[2])

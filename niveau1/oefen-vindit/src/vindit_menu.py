@@ -15,6 +15,7 @@ APARTE_TERMINAL = True
 
 # APART TERMINALVENSTER OPENEN
 
+# Voorkomt dat er steeds opnieuw een terminal opent.
 if APARTE_TERMINAL and os.environ.get("VINDIT_TERMINAL") != "1":
 
     script = str(Path(__file__).resolve())
@@ -22,6 +23,7 @@ if APARTE_TERMINAL and os.environ.get("VINDIT_TERMINAL") != "1":
     omgeving = os.environ.copy()
     omgeving["VINDIT_TERMINAL"] = "1"
 
+    # Kijken welke terminal beschikbaar is.
     if shutil.which("ptyxis"):
         subprocess.Popen(
             ["ptyxis", "--", sys.executable, script],
@@ -53,6 +55,7 @@ if APARTE_TERMINAL and os.environ.get("VINDIT_TERMINAL") != "1":
 
 # DATABASE
 
+# Pad naar de database.
 database = (
     Path(__file__).resolve().parent.parent
     / "db"
@@ -60,11 +63,14 @@ database = (
 )
 
 connection = sqlite3.connect(database)
+
+# Cursor voert de SQL-query's uit.
 cursor = connection.cursor()
 
 
 # KLEUREN
 
+# Kleuren voor de terminal.
 CYAAN = "\033[96m"
 GROEN = "\033[92m"
 GEEL = "\033[93m"
@@ -113,6 +119,7 @@ def toon_menu():
 
 
 def toon_verkopen(verkopen):
+    # Krijgt de gevonden verkopen mee en toont ze.
     leeg_scherm()
 
     print(CYAAN + VET)
@@ -127,9 +134,11 @@ def toon_verkopen(verkopen):
     else:
         for verkoop in verkopen:
 
+            # Waardes uit de rij halen.
             verkoopmoment = verkoop[0]
             categorie = verkoop[1]
 
+            # Opbrengst omzetten naar een float.
             opbrengst = float(
                 str(verkoop[2]).replace(",", ".")
             )
@@ -152,6 +161,7 @@ def toon_verkopen(verkopen):
 
 keuze = ""
 
+# Menu blijft draaien totdat X wordt gekozen.
 while keuze.upper() != "X":
 
     toon_menu()
@@ -174,6 +184,7 @@ while keuze.upper() != "X":
             """
         )
 
+        # fetchall() haalt alle gevonden rijen op.
         verkopen = cursor.fetchall()
 
         toon_verkopen(verkopen)
@@ -185,6 +196,7 @@ while keuze.upper() != "X":
 
     elif keuze == "2":
 
+        # LOWER maakt hoofdletters niet belangrijk.
         cursor.execute(
             """
             SELECT verkoopmoment, categorie, opbrengst
@@ -225,6 +237,7 @@ while keuze.upper() != "X":
 
     elif keuze == "4":
 
+        # Alles behalve kleding en boeken.
         cursor.execute(
             """
             SELECT verkoopmoment, categorie, opbrengst
@@ -254,6 +267,7 @@ while keuze.upper() != "X":
         print("+------------------------------------------------------+")
         print(RESET)
 
+        # Invoer netjes maken.
         categorie = input(
             "Categorie: "
         ).strip().lower()
@@ -262,6 +276,7 @@ while keuze.upper() != "X":
             "Opbrengst in euro: "
         )
 
+        # Zowel 12,50 als 12.50 laten werken.
         opbrengst_input = opbrengst_input.replace(",", ".")
 
         verkoopmoment_input = input(
@@ -276,6 +291,7 @@ while keuze.upper() != "X":
 
         else:
             try:
+                # Controleren of de datum goed is ingevuld.
                 datetime.strptime(
                     verkoopmoment_input,
                     "%Y-%m-%d %H:%M:%S"
@@ -314,6 +330,9 @@ while keuze.upper() != "X":
                 )
             )
 
+            # Tip: ? zijn placeholders.
+            # De waardes worden apart meegegeven en niet in de SQL geplakt.
+
             connection.commit()
 
             print()
@@ -348,6 +367,8 @@ while keuze.upper() != "X":
 
         leeg_scherm()
 
+        # SUM telt alles op.
+        # CAST zet de opbrengst om naar een getal.
         cursor.execute(
             """
             SELECT SUM(
@@ -360,6 +381,7 @@ while keuze.upper() != "X":
             """
         )
 
+        # Er komt maar 1 resultaat terug.
         totaal = cursor.fetchone()[0]
 
         if totaal is None:
@@ -436,6 +458,7 @@ while keuze.upper() != "X":
 
         leeg_scherm()
 
+        # DISTINCT haalt dubbele categorieën weg.
         cursor.execute(
             """
             SELECT DISTINCT categorie
@@ -482,6 +505,7 @@ while keuze.upper() != "X":
             "Waar wil je naar zoeken? "
         ).strip()
 
+        # % betekent dat er voor en na de zoekterm nog tekst mag staan.
         zoekwaarde = "%" + zoekterm + "%"
 
         cursor.execute(
@@ -499,6 +523,8 @@ while keuze.upper() != "X":
                 zoekwaarde
             )
         )
+
+        # Tip: LIKE gebruik je voor zoeken op een deel van een waarde.
 
         resultaten = cursor.fetchall()
 
@@ -521,6 +547,7 @@ while keuze.upper() != "X":
 
         verkopen = cursor.fetchall()
 
+        # Dictionary met maand -> totale opbrengst.
         opbrengst_per_maand = {}
 
         for verkoop in verkopen:
@@ -532,6 +559,7 @@ while keuze.upper() != "X":
             )
 
 
+            # Bijvoorbeeld 2026-09 uit 2026-09-15.
             maand = verkoopmoment[0:7]
 
             if maand in opbrengst_per_maand:
