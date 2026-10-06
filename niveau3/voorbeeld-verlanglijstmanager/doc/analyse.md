@@ -37,6 +37,32 @@ In dit document worden de functionele en non-functionele eisen van de applicatie
 - **C7. Deployment/Usability:** De applicatie moet op een standaardbesturingssysteem via de terminal gestart kunnen worden, zodat de gebruiker het programma kan gebruiken en testen in de beoogde leeromgeving.
 - **C8. Data portability:** [Vul in]
 
+## Analyse-start: tussenversie voor afstemming
+
+De eerste versie richt zich op het beheren van bestaande verlanglijsten en items. De selectie hieronder is gebaseerd op het interview en is nog niet met medestudenten of docent afgestemd.
+
+| Geselecteerde eis | Waarom nu? |
+|---|---|
+| US1 – Item toevoegen (Must) | Studenten willen wensen op één plek vastleggen en in een lijst plaatsen. |
+| US2 – Itemprijs aanpassen (Must) | Prijzen veranderen en moeten bijgewerkt kunnen worden. |
+| US3 – Lijstbudget aanpassen (Must) | Afspraken over het maximumbedrag per lijst kunnen veranderen. |
+| US4 – Item verwijderen (Must) | Een gekocht of niet meer gewenst item moet van de lijst af kunnen. |
+| US5 – Prioriteit aangeven (Should) | De student wil kunnen zien welke wensen belangrijker zijn; de vier beheeracties gaan eerst. |
+
+**User concerns voor deze versie:**
+- **C1 – Data integrity:** Winkels en lijsten blijven herkenbaar en consistent, zodat dezelfde gegevens niet onder verschillende namen in overzichten verschijnen.
+- **C5 – Usability:** De student kan de handelingen via een duidelijk menu uitvoeren en krijgt begrijpelijke meldingen bij een ongeldige keuze.
+
+**Later uitwerken:** Zoeken op prijs, spaarplannen, uitgavenoverzichten, totale kosten met verzendkosten en sessiestatistieken staan bij increment 2. CSV-import en toegangscode staan bij increment 3. De prioriteitsafhankelijke budgetberekening en het aanpassen van verzendkosten zijn voor deze eerste versie niet nodig. De overige bestaande eisen blijven hieronder staan voor latere bespreking.
+
+**Voorlopige kwaliteitscontrole:** De vijf stories hebben een gebruiker, een handeling en een reden, sluiten aan op het interview en zijn afzonderlijk te beoordelen. C1 en C5 beschrijven een zorg van de gebruiker; bij de uitwerking maken we ze toetsbaar via consistente lijst- en winkelnamen, een herkenbaar menu en meldingen bij ongeldige keuzes. Vergelijk deze controle nog met de exacte 💎 kwaliteitseisen van de groep.
+
+## Use Cases: lesvragen en aanvullende kwaliteitseisen
+
+- Bij stap 2 van het voorbeeld kan het ontbreken van orders een probleem zijn. De preconditie zegt al dat er orders aanwezig zijn; zonder orders start deze use case niet. Daarom is daarvoor geen alternatieve flow beschreven.
+- Bij stap 6 wordt een hoeveelheid buiten 1-10 automatisch gecorrigeerd. De use case gaat daarna normaal verder; er ontstaat dus geen afzonderlijk verloop.
+- Een use case vermeldt de actor en toetsbare precondities. De normale flow is genummerd en beschrijft zichtbaar wat gebruiker en systeem doen. Elke alternatieve flow verwijst naar de stap waar het afwijkt en vermeldt de melding, het vervolg en of gegevens wel of niet worden opgeslagen. Automatische correctie hoort in de normale flow als het proces gewoon doorgaat.
+
 ## Increment 1 Use Cases
 
 ### UC1: Item handmatig toevoegen
@@ -58,6 +84,9 @@ In dit document worden de functionele en non-functionele eisen van de applicatie
 
 ### UC2: Prijs van item aanpassen
 **Actor:** Student  
+**Precondities:**
+- De applicatie is gestart.
+
 **Beschrijving:**
 
 1. De student kiest de optie "Prijs van item aanpassen".
@@ -70,7 +99,9 @@ In dit document worden de functionele en non-functionele eisen van de applicatie
 
 **Alternatieve flows:**
 2. a.  Als er geen verlanglijsten aanwezig zijn, volgt een foutmelding en stopt de use case.
+3. a.  Als het gekozen lijstnummer niet bestaat, volgt een foutmelding en stopt de use case zonder prijswijziging.
 4. a.  Als er geen items aanwezig zijn in de gekozen verlanglijst, volgt een foutmelding en stopt de use case.
+5. a.  Als het gekozen itemnummer niet bestaat, volgt een foutmelding en stopt de use case zonder prijswijziging.
 
 
 ### UC3: Lijstbudget aanpassen
@@ -89,7 +120,8 @@ In dit document worden de functionele en non-functionele eisen van de applicatie
 7. Het systeem bevestigt de wijziging.
 
 **Alternatieve flows:**
-2. a. Als er geen verlanglijsten aanwezig zijn, volgt een foutmelding en stopt de use case.
+2. a. Als er geen verlanglijsten aanwezig zijn, volgt een foutmelding en stopt de use case zonder budgetwijziging.
+3. a. Als het gekozen lijstnummer niet bestaat, volgt een foutmelding en stopt de use case zonder budgetwijziging.
 
 ### UC4: Item verwijderen
 **Actor:** Student  

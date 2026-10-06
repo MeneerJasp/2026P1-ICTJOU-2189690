@@ -110,7 +110,99 @@ Voor alle testcases wordt de volgende voorbereiding verwacht:
 
 ## UC2: Testen "Pas item prijs aan"
 
-[Opstellen testscenario's voor UC2]
+### Testscenario 1: Succesvolle prijsaanpassing
+
+**Precondities:**
+* De applicatie is gestart.
+* De lijst `Elektronica` bestaat.
+* Het item `Koptelefoon` staat in `Elektronica` met een prijs van €79.99.
+
+**Testscenario:**
+1. Start de applicatie.
+2. Kies in het menu voor optie 2 ("Pas item prijs aan").
+3. Het systeem toont de beschikbare verlanglijsten.
+4. Kies `Elektronica`.
+5. Het systeem toont een genummerde lijst met items uit `Elektronica`.
+6. Kies het nummer dat bij `Koptelefoon` staat.
+7. Voer als nieuwe prijs `69.99` in.
+
+**Verwacht resultaat:**
+* Het systeem bevestigt de prijswijziging.
+* In de database staat `Koptelefoon` in `Elektronica` met prijs €69.99.
+* De andere gegevens van het item blijven gelijk.
+
+---
+
+### Testscenario 2: Prijs aanpassen zonder verlanglijsten
+
+**Precondities:**
+* De applicatie is gestart.
+* Er zijn geen verlanglijsten in de database.
+
+**Testscenario:**
+1. Start de applicatie.
+2. Kies in het menu voor optie 2 ("Pas item prijs aan").
+
+**Verwacht resultaat:**
+* Het systeem meldt dat er geen verlanglijsten beschikbaar zijn.
+* De use case stopt zonder prijswijziging.
+
+---
+
+### Testscenario 3: Ongeldig lijstnummer kiezen
+
+**Precondities:**
+* De applicatie is gestart.
+* `Elektronica` bestaat en bevat het item `Koptelefoon` met prijs €79.99.
+
+**Testscenario:**
+1. Start de applicatie.
+2. Kies in het menu voor optie 2 ("Pas item prijs aan").
+3. Het systeem toont de beschikbare verlanglijsten.
+4. Voer als lijstnummer `9999` in.
+
+**Verwacht resultaat:**
+* Het systeem meldt dat de lijstkeuze ongeldig is.
+* De use case stopt.
+* De prijs van `Koptelefoon` blijft €79.99.
+
+---
+
+### Testscenario 4: Prijs aanpassen in een lege lijst
+
+**Precondities:**
+* De applicatie is gestart.
+* De lijst `Sport` bestaat en bevat geen items.
+
+**Testscenario:**
+1. Start de applicatie.
+2. Kies in het menu voor optie 2 ("Pas item prijs aan").
+3. Het systeem toont de beschikbare verlanglijsten.
+4. Kies `Sport`.
+
+**Verwacht resultaat:**
+* Het systeem meldt dat er geen items in `Sport` aanwezig zijn.
+* De use case stopt zonder prijswijziging.
+
+---
+
+### Testscenario 5: Ongeldig itemnummer kiezen
+
+**Precondities:**
+* De applicatie is gestart.
+* `Elektronica` bestaat en bevat het item `Koptelefoon` met prijs €79.99.
+
+**Testscenario:**
+1. Start de applicatie.
+2. Kies in het menu voor optie 2 ("Pas item prijs aan").
+3. Kies `Elektronica`.
+4. Het systeem toont een genummerde lijst met items uit `Elektronica`.
+5. Voer als itemnummer `9999` in.
+
+**Verwacht resultaat:**
+* Het systeem meldt dat de itemkeuze ongeldig is.
+* De use case stopt.
+* De prijs van `Koptelefoon` blijft €79.99.
 
 ---
 

@@ -6,11 +6,20 @@ In dit document worden de functionele en non-functionele eisen van de applicatie
 
 De kern van het probleem is dat creatieve ideeen in ontwerpfases vaak sneller groeien dan de financiele en logistieke realiteit. Teams ontdekken daardoor soms te laat dat een scenario niet haalbaar is binnen het beschikbare budget of de planning. QuestComposer moet dit voorkomen door vroeg in het proces inzicht te geven in complete kosten, leveranciersafhankelijkheden en budgetoverschrijdingen per scenario.
 
+## Analyse-start increment 1
+
+Voor de eerste versie kiezen we de handelingen die nodig zijn om de onderdelen en het budget van een bestaand scenario bij te houden. Een ontwerper kan een onderdeel toevoegen, de prijs bijwerken, het scenariobudget bijstellen en een onderdeel verwijderen. Daarbij zijn consistente scenario- en leveranciersnamen belangrijk voor betrouwbare gegevens. Het menu moet duidelijk genoeg zijn om deze handelingen zonder kennis van de opslag te gebruiken.
+
+De prioriteit 1-3 voor onderdelen is een Should. Het uitgebreide haalbaarheidsoverzicht, transportkosten, zoeken en inkoopritme staan bij increment 2. CSV-import en de toegangscode staan bij increment 3. Deze afbakening is een eerste analyse op basis van het interview en de gegeven Use Cases; bespreek de keuzes nog met een medestudent.
+
 ### User stories
 
 | User Story | Prioriteit | Increment |
 |---|---|---:|
-| [Schrijf de eerste vier User Stories]| Must | 1 |
+| **US1.** Als ontwerper wil ik een puzzelonderdeel aan een scenario kunnen toevoegen, zodat ik alle onderdelen per scenario kan bijhouden. | Must | 1 |
+| **US2.** Als ontwerper wil ik de prijs van een puzzelonderdeel kunnen aanpassen, zodat ik met actuele kosten werk. | Must | 1 |
+| **US3.** Als ontwerper wil ik het budget van een scenario kunnen aanpassen, zodat het budget aansluit bij de gemaakte afspraken. | Must | 1 |
+| **US4.** Als ontwerper wil ik een puzzelonderdeel uit een scenario kunnen verwijderen, zodat het overzicht alleen onderdelen bevat die nog nodig zijn. | Must | 1 |
 | **US5.** Als ontwerper wil ik prioriteit (1-3) aan onderdelen kunnen geven, zodat ik weet wat eerst aangeschaft moet worden. | Should | 1 |
 | **US6.** Als ontwerper wil ik de totale kosten (prijs + transportkosten) zien, zodat ik niet voor verrassingen kom te staan. | Must | 2 |
 | **US7.** Als ontwerper wil ik kosten per scenario kunnen inzien, inclusief budgetoverschrijdingen, zodat ik realistisch kan plannen. | Must | 2 |
@@ -22,10 +31,10 @@ De kern van het probleem is dat creatieve ideeen in ontwerpfases vaak sneller gr
 
 ### User concerns
 
-- **C1.** [Vul in]
+- **C1. Data integrity:** Scenario's en leveranciers moeten consequent onder dezelfde naam worden vastgelegd, zodat onderdelen niet onbedoeld over verschillende namen worden verdeeld en overzichten betrouwbaar blijven.
 - **C2. Security:** De applicatie moet beschermd worden tegen ongeautoriseerde toegang door het gebruik van een toegangscode.
-- **C3. Security:** [Vul in]
-- **C4. Security:** [Vul in]
+- **C3. Security:** Gevoelige configuratie, zoals de toegangscode, mag niet leesbaar in de broncode of in gedeelde projectbestanden staan.
+- **C4. Security:** De toegangscode moet veilig worden verwerkt en opgeslagen, zodat de oorspronkelijke code niet uit de opgeslagen waarde kan worden afgelezen.
 - **C5. Usability:** De interface moet eenvoudig te gebruiken zijn in de terminal.
 - **C6. Scalability:** Het ontwerp moet uitbreidbaar zijn voor toekomstige versies.
 - **C7. Realiteitscheck:** Het systeem moet vroeg en duidelijk laten zien of een scenario financieel haalbaar is, zodat misrekeningen tijdens bouw of testweek worden voorkomen.
@@ -73,7 +82,25 @@ De kern van het probleem is dat creatieve ideeen in ontwerpfases vaak sneller gr
 5. a. Als het gekozen onderdeelnummer niet bestaat, volgt een foutmelding en stopt de use case.
 
 ### UC3: Scenariobudget bijstellen
-[Stel UC3 op]
+**Actor:** Ontwerper
+
+**Precondities:**
+- De applicatie is gestart.
+
+**Beschrijving:**
+
+1. De ontwerper kiest "Stel scenariobudget bij".
+2. Het systeem toont de beschikbare scenario's en hun huidige budget.
+3. De ontwerper kiest het scenario waarvan het budget moet veranderen.
+4. Het systeem vraagt om het nieuwe budget.
+5. De ontwerper voert het nieuwe budget in.
+6. Het systeem slaat het nieuwe budget voor het gekozen scenario op.
+7. Het systeem bevestigt dat het budget is aangepast.
+
+**Alternatieve flows:**
+
+2. a. Als er geen scenario's aanwezig zijn, toont het systeem een foutmelding en stopt de use case zonder budgetwijziging.
+3. a. Als het gekozen scenarionummer niet bestaat, toont het systeem "Ongeldige keuze." en stopt de use case zonder budgetwijziging.
 
 ### UC4: Onderdeel verwijderen
 **Actor:** Ontwerper
