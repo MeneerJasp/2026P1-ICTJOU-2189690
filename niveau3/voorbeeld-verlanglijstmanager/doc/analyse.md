@@ -229,8 +229,7 @@ De eerste versie richt zich op het beheren van bestaande verlanglijsten en items
 
 ## Domeinmodel
 
-[Opstellen domeinmodel]
-
+![](img/domeindimg.png)
 
 ## Gebruikersinterface
 
