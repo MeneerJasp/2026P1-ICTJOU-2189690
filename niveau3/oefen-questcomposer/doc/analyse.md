@@ -10,7 +10,9 @@ De kern van het probleem is dat creatieve ideeen in ontwerpfases vaak sneller gr
 
 Voor de eerste versie kiezen we de handelingen die nodig zijn om de onderdelen en het budget van een bestaand scenario bij te houden. Een ontwerper kan een onderdeel toevoegen, de prijs bijwerken, het scenariobudget bijstellen en een onderdeel verwijderen. Daarbij zijn consistente scenario- en leveranciersnamen belangrijk voor betrouwbare gegevens. Het menu moet duidelijk genoeg zijn om deze handelingen zonder kennis van de opslag te gebruiken.
 
-De prioriteit 1-3 voor onderdelen is een Should. Het uitgebreide haalbaarheidsoverzicht, transportkosten, zoeken en inkoopritme staan bij increment 2. CSV-import en de toegangscode staan bij increment 3. Deze afbakening is een eerste analyse op basis van het interview en de gegeven Use Cases; bespreek de keuzes nog met een medestudent.
+Voor increment 1 zijn C1 (consistente scenario- en leveranciersnamen), C5 (een duidelijk menu) en C8 (kunnen werken via de terminal) de drie belangrijkste user concerns. De beveiliging met toegangscode uit C2, C3 en C4 hoort bij increment 3.
+
+De prioriteit 1-3 voor onderdelen staat bij US5 als Should. De gegeven UC1 vraagt tijdens het toevoegen al om een prioriteit. Dit verschil moet nog met de docent worden afgestemd. Het uitgebreide haalbaarheidsoverzicht, transportkosten, zoeken en inkoopritme staan bij increment 2. CSV-import en de toegangscode staan bij increment 3. Deze afbakening is een eerste analyse op basis van het interview en de gegeven Use Cases.
 
 ### User stories
 
@@ -35,7 +37,7 @@ De prioriteit 1-3 voor onderdelen is een Should. Het uitgebreide haalbaarheidsov
 - **C2. Security:** De applicatie moet beschermd worden tegen ongeautoriseerde toegang door het gebruik van een toegangscode.
 - **C3. Security:** Gevoelige configuratie, zoals de toegangscode, mag niet leesbaar in de broncode of in gedeelde projectbestanden staan.
 - **C4. Security:** De toegangscode moet veilig worden verwerkt en opgeslagen, zodat de oorspronkelijke code niet uit de opgeslagen waarde kan worden afgelezen.
-- **C5. Usability:** De interface moet eenvoudig te gebruiken zijn in de terminal.
+- **C5. Usability:** Het menu moet duidelijke keuzes en begrijpelijke foutmeldingen tonen, zodat een ontwerper de onderdelen en budgetten zonder technische voorkennis kan beheren.
 - **C6. Scalability:** Het ontwerp moet uitbreidbaar zijn voor toekomstige versies.
 - **C7. Realiteitscheck:** Het systeem moet vroeg en duidelijk laten zien of een scenario financieel haalbaar is, zodat misrekeningen tijdens bouw of testweek worden voorkomen.
 - **C8. Deployment/Usability:** De applicatie moet op een standaardbesturingssysteem via de terminal gestart kunnen worden, zodat de gebruiker het programma kan gebruiken en testen in de beoogde leeromgeving.
