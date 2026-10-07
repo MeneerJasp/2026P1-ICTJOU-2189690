@@ -3,6 +3,7 @@ import sqlite3
 import hashlib
 import os
 import csv
+import math
 
 # Configuratievariabelen (constanten)
 STANDAARD_VERZENDKOSTEN = 0.00
@@ -29,7 +30,7 @@ def main():
         if keuze == '1':
             itembeheer.voeg_item_toe(verbinding)
         elif keuze == '2':
-            itembeheer.pas_itemprijs_aan(verbinding)
+            pas_itemprijs_aan(verbinding)
         elif keuze == '3':
             itembeheer.verwijder_item(verbinding)
         elif keuze == '4':
@@ -91,7 +92,39 @@ def voeg_item_toe(verbinding):
 
 def pas_itemprijs_aan(verbinding):
     """UC2: Past de prijs van een bestaand item aan op basis van een gekozen lijst en titel."""
-    pass # [Programmeer Use Case 2, gebruik de functie kies_verlanglijst en haal_items_van_lijst_op, en update_prijs om de prijs aan te passen]
+    lijstnaam = kies_verlanglijst(verbinding)
+    if lijstnaam is None:
+        return
+
+    items = haal_items_van_lijst_op(verbinding, lijstnaam)
+    if not items:
+        print("Er zijn geen items in deze verlanglijst.")
+        return
+
+    for volgnummer, item in enumerate(items, start=1):
+        print(f"{volgnummer}. {item['titel']} - €{item['prijs']:.2f}")
+
+    try:
+        keuze = int(input("Welk item wil je aanpassen? (nummer): "))
+    except ValueError:
+        print("Ongeldige keuze.")
+        return
+    if not 1 <= keuze <= len(items):
+        print("Ongeldige keuze.")
+        return
+
+    try:
+        nieuwe_prijs = float(input("Nieuwe prijs: ").replace(",", "."))
+    except ValueError:
+        print("Ongeldige prijs.")
+        return
+    if not math.isfinite(nieuwe_prijs) or nieuwe_prijs < 0:
+        print("Ongeldige prijs.")
+        return
+
+    titel = items[keuze - 1]['titel']
+    update_prijs(verbinding, lijstnaam, titel, nieuwe_prijs)
+    print(f"De prijs van {titel} is aangepast naar €{nieuwe_prijs:.2f}.")
 
 def pas_lijstbudget_aan(verbinding):
     """UC3: Past het budgetlimiet van een lijst aan op basis van de gebruikersinvoer."""
@@ -109,11 +142,11 @@ def toon_items_binnen_budget(verbinding):
     grens2 = float(input("Voer de tweede budgetgrens in: "))
 
     # Stap 3. Het systeem bepaalt automatisch de laagste en hoogste grens:
-    min_budget = # gebruik een python-functie om de laagste waarde te bepalen
-    max_budget = # gebruik een python-functie om de hoogste waarde te bepalen
+    min_budget = min(grens1, grens2)
+    max_budget = max(grens1, grens2)
 
     # 4. Het systeem haalt alle items op die binnen dit prijsbereik vallen.
-    items = haal_items_binnen_budget(verbinding, ?)
+    items = haal_items_binnen_budget(verbinding, min_budget, max_budget)
     if not items:
         print("Er zijn geen items binnen het opgegeven budgetbereik.")
         return
@@ -131,16 +164,16 @@ def bereken_spaarplan(verbinding):
         print("Er zijn geen items beschikbaar voor een spaarplan.")
         return
 
-    for ??
+    for volgnummer, item in enumerate(items, start=1):
         print(f"{volgnummer}. [{item['lijstnaam']}] {item['titel']} - €{item['prijs']:.2f}")
 
     # 3. De student voert het nummer (index) van het gewenste item in.
     keuze = int(input("Voor welk item wil je een spaarplan? (nummer): "))
-    if ??:
+    if not 1 <= keuze <= len(items):
         print("Ongeldige keuze.")
         return
 
-    gekozen_item = items[??]
+    gekozen_item = items[keuze - 1]
     prijs = float(gekozen_item['prijs'])
 
     # 4. Het systeem vraagt over hoeveel maanden het item gekocht moet worden.
@@ -151,7 +184,7 @@ def bereken_spaarplan(verbinding):
     
     for maand in range(1, maanden + 1):
         # 5. Het systeem berekent per maand het cumulatieve spaarbedrag.
-        gespaard = ??
+        gespaard = prijs * maand / maanden
         print(f"Maand {maand}: Totaal gespaard: €{gespaard}")
 
 def toon_overzicht_per_lijst(verbinding):
@@ -205,12 +238,29 @@ def controleer_toegangscode():
 
 def toon_beschikbare_verlanglijsten(verbinding):
     """Toont alle beschikbare verlanglijsten en geeft ze terug."""
-    pass # [Programmeer functie tonen van beschikbare verlanglijsten, gebruik de functie haal_lijsten_op]
+    lijsten = haal_lijsten_op(verbinding)
+    if not lijsten:
+        print("Er zijn geen verlanglijsten.")
+        return []
+    for volgnummer, lijst in enumerate(lijsten, start=1):
+        print(f"{volgnummer}. {lijst['naam']}")
+    return lijsten
 
 
 def kies_verlanglijst(verbinding):
     """Vraagt de gebruiker om eerst een verlanglijst te kiezen."""
-    pass # [Programmeer functie om een verlanglijst te kiezen, gebruik de functie toon_beschikbare_verlanglijsten] 
+    lijsten = toon_beschikbare_verlanglijsten(verbinding)
+    if not lijsten:
+        return None
+    try:
+        keuze = int(input("Welke verlanglijst kies je? (nummer): "))
+    except ValueError:
+        print("Ongeldige keuze.")
+        return None
+    if not 1 <= keuze <= len(lijsten):
+        print("Ongeldige keuze.")
+        return None
+    return lijsten[keuze - 1]['naam']
 
 
 def lees_toegangscode_hash():
@@ -241,19 +291,30 @@ def haal_alle_items_op(verbinding):
 
 def haal_items_van_lijst_op(verbinding, lijstnaam):
     """Haalt alleen items van een specifieke verlanglijst op via SQL-filtering."""
-    pass # [Programmeer databasefunctie voor het ophalen van items van een specifieke lijst]
+    cursor = verbinding.cursor()
+    cursor.execute(
+        "SELECT titel, prijs FROM Item WHERE lijst = ? ORDER BY titel",
+        (lijstnaam,)
+    )
+    return cursor.fetchall()
 
 def haal_lijsten_op(verbinding):
     """Haalt alle lijsten op inclusief hun budgetlimiet."""
-    pass # [Programmeer databasefunctie voor het ophalen van lijsten]
+    cursor = verbinding.cursor()
+    cursor.execute("SELECT naam, budget_limiet FROM Lijst ORDER BY naam")
+    return cursor.fetchall()
 
 
-def update_prijs(verbinding, ?):
+def update_prijs(verbinding, lijstnaam, titel, nieuwe_prijs):
     """Update de prijs van een item op basis van lijstnaam en titel."""
-    pass # [Programmeer databasefunctie voor het updaten van de prijs van een item]
+    cursor = verbinding.cursor()
+    cursor.execute(
+        "UPDATE Item SET prijs = ? WHERE lijst = ? AND titel = ?",
+        (nieuwe_prijs, lijstnaam, titel)
+    )
 
 
-def verwijder_item_uit_db(verbinding, ?):
+def verwijder_item_uit_db(verbinding, lijstnaam, titel):
     """Verwijdert een item op basis van lijstnaam en titel."""
     pass # [Programmeer databasefunctie voor het verwijderen van een item]
 
@@ -268,7 +329,7 @@ def voeg_item_toe_aan_db(verbinding, titel, prijs, winkel_naam, lijst_naam, prio
     cursor.execute(query, (lijst_naam, titel, prijs, winkel_naam, prio))
 
 
-def haal_items_binnen_budget(verbinding, ?):
+def haal_items_binnen_budget(verbinding, min_budget, max_budget):
     """Haal items op waarvan de prijs tussen min_budget en max_budget ligt."""
     pass # [Programmeer databasefunctie voor het ophalen van items binnen een budget]
 
@@ -295,7 +356,9 @@ def haal_verlanglijst_op(verbinding):
 
 def haal_lijsten_op(verbinding):
     """Haalt alle lijsten op inclusief hun budgetlimiet."""
-    pass # [Programmeer databasefunctie voor het ophalen van lijsten]
+    cursor = verbinding.cursor()
+    cursor.execute("SELECT naam, budget_limiet FROM Lijst ORDER BY naam")
+    return cursor.fetchall()
 
 
 def haal_lijststatistieken_op(verbinding):
@@ -307,7 +370,6 @@ def update_lijstbudget(verbinding, lijstnaam, nieuw_budget):
     """Update het budgetlimiet van een lijst."""
     pass # [Programmeer databasefunctie voor het updaten van het budgetlimiet van een lijst]
   
-
 def check_winkel_bestaat(verbinding, winkelnaam):
     """Controleert of een winkel al bestaat in de database."""
     cursor = verbinding.cursor()

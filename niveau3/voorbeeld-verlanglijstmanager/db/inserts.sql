@@ -1,17 +1,8 @@
 PRAGMA foreign_keys = ON;
 
-DELETE FROM Winkel;
+DELETE FROM Item;
 DELETE FROM Lijst;
-
--- Item
-INSERT INTO Item (lijst, titel, prijs, winkel, prioriteit) VALUES
-('Elektronica', 'Koptelefoon', 79.99, 'Coolblue', 1),
-('Elektronica', 'Mechanisch Toetsenbord', 129.95, 'MediaMarkt', 2),
-('Studie', 'Grafische Rekenmachine', 89.50, 'Amazon.nl', 1);
-INSERT INTO Item (lijst, titel, prijs, winkel, prioriteit) VALUES
-('Elektronica', 'Smartwatch', 199.00, 'Bol.com', 2),
-('Sport', '27 inch Monitor', 349.99, 'Coolblue', 1),
-('Sport', 'Rugzak', 59.95, 'MediaMarkt', 3);
+DELETE FROM Winkel;
 
 -- Winkel
 INSERT INTO Winkel (naam, verzendkosten) VALUES
@@ -26,3 +17,12 @@ INSERT INTO Lijst (naam, budget_limiet) VALUES
 ('Studie', 200.00),
 ('Sport', 300.00);
 
+-- Item
+INSERT INTO Item (lijst, titel, prijs, winkel, prioriteit) VALUES
+('Elektronica', 'Koptelefoon', 79.99, 'Coolblue', 1),
+('Elektronica', 'Mechanisch Toetsenbord', 129.95, 'MediaMarkt', 2),
+('Studie', 'Grafische Rekenmachine', 89.50, 'Amazon.nl', 1);
+INSERT INTO Item (lijst, titel, prijs, winkel, prioriteit) VALUES
+('Elektronica', 'Smartwatch', 199.00, 'Bol.com', 2),
+('Sport', '27 inch Monitor', 349.99, 'Coolblue', 1),
+('Sport', 'Rugzak', 59.95, 'MediaMarkt', 3);
