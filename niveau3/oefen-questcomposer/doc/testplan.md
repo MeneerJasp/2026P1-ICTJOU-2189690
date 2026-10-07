@@ -96,7 +96,74 @@ Voor alle testcases wordt de volgende voorbereiding verwacht:
 ---
 
 ## UC2: Testen "Herbereken kostprijs van onderdeel"
-[Schrijf testscenario's voor deze use case, inclusief precondities, teststappen en verwachte resultaten.]
+
+### Testscenario 1: Succesvolle prijsaanpassing
+
+**Precondities:**
+* De applicatie is gestart.
+* Scenario `Bankoverval` bestaat.
+* Onderdeel `Code-slot` staat in `Bankoverval` met een prijs van €89,00.
+
+**Testscenario:**
+1. Kies in het menu voor optie 2.
+2. Het systeem toont de beschikbare scenario's.
+3. Kies scenario `Bankoverval`.
+4. Het systeem toont de genummerde onderdelenlijst.
+5. Kies het nummer van `Code-slot`.
+6. Voer als nieuwe prijs `95.00` in.
+
+**Verwacht resultaat:**
+* Het systeem bevestigt de prijswijziging.
+* In de database heeft `Code-slot` in `Bankoverval` een prijs van €95,00.
+
+### Testscenario 2: Prijs aanpassen zonder beschikbare scenario's
+
+**Precondities:**
+* De applicatie is gestart.
+* Er zijn geen scenario's aanwezig in de database.
+
+**Testscenario:**
+1. Kies in het menu voor optie 2.
+
+**Verwacht resultaat:**
+* Het systeem meldt dat er geen scenario's beschikbaar zijn.
+* De use case stopt zonder prijswijziging.
+
+### Testscenario 3: Prijs aanpassen in een scenario zonder onderdelen
+
+**Precondities:**
+* De applicatie is gestart.
+* Scenario `LeegScenario` bestaat, maar bevat geen onderdelen.
+
+**Testscenario:**
+1. Kies in het menu voor optie 2.
+2. Het systeem toont de beschikbare scenario's.
+3. Kies scenario `LeegScenario`.
+
+**Verwacht resultaat:**
+* Het systeem meldt dat er geen onderdelen in dit scenario aanwezig zijn.
+* De use case stopt zonder prijswijziging.
+
+### Testscenario 4: Prijs aanpassen met ongeldig onderdeelnummer
+
+**Precondities:**
+* De applicatie is gestart.
+* Scenario `Bankoverval` bestaat.
+* Onderdeel `Code-slot` staat in `Bankoverval` met een prijs van €89,00.
+
+**Testscenario:**
+1. Kies in het menu voor optie 2.
+2. Het systeem toont de beschikbare scenario's.
+3. Kies scenario `Bankoverval`.
+4. Het systeem toont de genummerde onderdelenlijst.
+5. Kies onderdeelnummer `9999`.
+
+**Verwacht resultaat:**
+* Het systeem toont een foutmelding voor het ongeldige nummer.
+* De use case stopt zonder prijswijziging.
+* `Code-slot` in `Bankoverval` kost nog steeds €89,00.
+
+---
 
 ## UC3: Testen "Stel scenariobudget bij"
 

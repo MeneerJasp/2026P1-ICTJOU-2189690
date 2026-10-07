@@ -236,7 +236,11 @@ De prioriteit 1-3 voor onderdelen staat bij US5 als Should. De gegeven UC1 vraag
 
 ## Domeinmodel
 
-[Voeg hier het domeinmodel toe]
+![](img/domeinmodel.svg)
+
+Scenario en Leverancier worden elk herkend aan hun naam. Onderdeel is afhankelijk van Scenario: de titel is binnen een scenario uniek, dus Scenario.naam en Onderdeel.titel identificeren samen een onderdeel. De pijl van Onderdeel naar Scenario geeft die afhankelijkheid aan. Een scenario kan nul of meer onderdelen bevatten; ieder onderdeel hoort bij precies een scenario. Een leverancier kan nul of meer onderdelen leveren; ieder onderdeel heeft precies een leverancier.
+
+De aanname dat een titel binnen een scenario niet twee keer voorkomt, moet nog met de opdrachtgever worden gecontroleerd.
 
 ## Gebruikersinterface
 

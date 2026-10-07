@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="320" viewBox="0 0 1280 320">
+  <rect width="1280" height="320" fill="white"/>
+  <g fill="white" stroke="#263238" stroke-width="2">
+    <rect x="35" y="55" width="260" height="195" rx="8"/>
+    <rect x="490" y="55" width="300" height="195" rx="8"/>
+    <rect x="995" y="55" width="250" height="195" rx="8"/>
+    <path d="M35 115H295 M490 115H790 M995 115H1245"/>
+    <path d="M311 165H472 M472 165H490 M790 165H995"/>
+    <path d="M295 165L312 155V175Z" fill="#263238"/>
+    <circle cx="455" cy="165" r="6"/>
+    <path d="M474 165L490 155 M474 165H490 M474 165L490 175"/>
+    <path d="M805 165L790 155 M805 165H790 M805 165L790 175"/>
+    <circle cx="825" cy="165" r="6"/>
+    <path d="M970 154V176 M982 154V176"/>
+    <path d="M66 146H120 M515 146H555 M1020 146H1074" stroke-width="1.5"/>
+  </g>
+  <g fill="#263238" font-family="Arial, sans-serif" font-size="20">
+    <text x="112" y="92">Scenario</text>
+    <text x="590" y="92">Onderdeel</text>
+    <text x="1065" y="92">Leverancier</text>
+    <text x="66" y="141">naam</text>
+    <text x="66" y="181">budget</text>
+    <text x="515" y="141">titel</text>
+    <text x="515" y="181">prijs</text>
+    <text x="515" y="221">prioriteit</text>
+    <text x="1020" y="141">naam</text>
+    <text x="1020" y="181">transportkosten</text>
+    <text x="359" y="144" font-size="18">bevat</text>
+    <text x="885" y="144" font-size="18">levert</text>
+    <text x="303" y="198" font-size="17">1</text>
+    <text x="435" y="198" font-size="17">0..*</text>
+    <text x="800" y="198" font-size="17">0..*</text>
+    <text x="976" y="198" font-size="17">1</text>
+    <text x="35" y="292" font-size="17">Onderdeel wordt geidentificeerd door Scenario.naam en Onderdeel.titel.</text>
+  </g>
+</svg>
