@@ -1,8 +1,8 @@
-# Ontwerp QuestComposer
+# Ontwerp Verlanglijstmanager
 
 ## Inleiding
 
-Dit document beschrijft het ontwerp van QuestComposer. Dit ontwerp biedt de technische basis voor de realisatie van de applicatie.
+Dit document beschrijft het ontwerp van Verlanglijstmanager. Dit ontwerp biedt de technische basis voor de realisatie van de applicatie.
 
 ## Technische eisen
 
@@ -33,68 +33,91 @@ De applicatie wordt ontwikkeld in Python 3 en kan vanaf een standaard Linux-omge
 ### TE9. Gegevensportabiliteit
 Bestandslocaties worden niet hardcoded in de broncode. De applicatie werkt met configureerbare bestandspaden en moet gegevens kunnen lezen en schrijven op verschillende opslaglocaties, waaronder andere schijven, externe opslagmedia en gemounte bestandssystemen.
 
+## Tabelontwerp
 
-## Database-ontwerp
+De drie entiteittypen uit het domeinmodel worden de tabellen `Lijst`, `Winkel` en `Item`. In dit technische ontwerp heet het attribuut budget uit het domeinmodel `budget_limiet`, zoals in het bestaande `db/inserts.sql`.
 
-[Voeg hier het database-ontwerp toe]
+### Lijst
 
+| Kolom | Datatype | Sleutel | Leeg toegestaan? |
+|---|---|---|---|
+| naam | TEXT | `<pk>` | NOT NULL |
+| budget_limiet | REAL | | NOT NULL |
+
+### Winkel
+
+| Kolom | Datatype | Sleutel | Leeg toegestaan? |
+|---|---|---|---|
+| naam | TEXT | `<pk>` | NOT NULL |
+| verzendkosten | REAL | | NOT NULL |
+
+### Item
+
+| Kolom | Datatype | Sleutel | Leeg toegestaan? |
+|---|---|---|---|
+| lijst | TEXT | `<pk> <fk1>` | NOT NULL |
+| titel | TEXT | `<pk>` | NOT NULL |
+| prijs | REAL | | NOT NULL |
+| winkel | TEXT | `<fk2>` | NULL |
+| prioriteit | INTEGER | | NOT NULL |
+
+De pijlen voor de relaties zijn:
+
+- `Item.lijst <fk1>` → `Lijst.naam <pk>`
+- `Item.winkel <fk2>` → `Winkel.naam <pk>`
+
+`Item.lijst` hoort bij de samengestelde primary key van Item, omdat een item alleen binnen een lijst met zijn titel wordt geïdentificeerd. `Item.winkel` mag leeg zijn: volgens het interview is een winkel soms nog niet bekend.
 
 ## Afhankelijkheden
 
-De applicatie "QuestComposer" is afhankelijk van de volgende bibliotheken:
+De applicatie "Verlanglijstmanager" is afhankelijk van de volgende bibliotheken:
 
-- `csv` - Voor het importeren van onderdelen uit CSV-bestanden.
+- `csv` - Voor het importeren van items uit CSV-bestanden.
 - `hashlib` - Voor het hashen van de toegangscode.
-
-## Software-architectuur
-
-[Voeg hier het software-architectuurdiagram toe]
 
 
 ## Detailontwerp
 
-De applicatie "QuestComposer" bestaat uit de onderstaande elementen.
+De applicatie "Verlanglijstmanager" bestaat uit de onderstaande elementen.
 
-### Globale variabelen module "QuestComposer"
+### Globale variabelen module "Verlanglijstmanager"
 
-[Maak een lijst van globale variabelen]
+- `sessiestatistieken` in `itembeheer.py`: Teller met aantallen toegevoegde en verwijderde items tijdens de huidige sessie.
+- `STANDAARD_VERZENDKOSTEN` in `importbeheer.py`: Standaardwaarde voor verzendkosten bij nieuw aangemaakte winkels via CSV-import.
+- `STANDAARD_LIJSTBUDGET` in `importbeheer.py`: Standaardbudget voor nieuw aangemaakte lijsten via CSV-import.
 
-### Functies module "questcomposer.py"
+### Software-architectuur
+[Opstellen Software-architectuurdiagram]
 
-- `maak_verbinding()`: Maakt een SQLite-verbinding met `db/questcomposer.db`, activeert foreign keys en retourneert de verbinding.
+
+### Functies module "verlangslijstmanager.py"
+
+- `maak_verbinding()`: Maakt een SQLite-verbinding met `db/verlanglijstmanager.db`, activeert foreign keys en retourneert de verbinding.
 - `toon_menu()`: Toont het hoofdmenu en vraagt de gebruiker om een keuze.
-- `main()`: Controleert toegangscode, maakt verbinding en stuurt de menu-acties aan.
+- `main()`: Start de applicatie, controleert toegangscode, maakt de databaseverbinding en stuurt de menu-acties aan.
 
-### Modules en functies
+### Overige functies
 
-- `haal_alle_onderdelen_op(verbinding)`: Haalt alle onderdelen op inclusief leverancier en scenario.
-- `haal_scenarios_op(verbinding)`: Haalt scenario's op met budget.
-- `update_prijs(verbinding, scenarionaam, titel, nieuwe_prijs)`: Past onderdeelprijs aan.
-- `verwijder_onderdeel_uit_db(verbinding, scenarionaam, titel)`: Verwijdert onderdeel op scenario+titel.
-- `voeg_onderdeel_toe_aan_db(verbinding, titel, prijs, leverancier_naam, scenario_naam, prio)`: Voegt onderdeel toe.
-- `haal_onderdelen_binnen_budget(verbinding, min_budget, max_budget)`: Haalt onderdelen in budgetrange op.
-- `check_leverancier_bestaat(verbinding, leveranciernaam)`: Controleert of leverancier bestaat.
-- `toon_beschikbare_scenarios(verbinding)`: Toont alle scenario's.
-- `kies_scenario(verbinding)`: Laat gebruiker een scenario kiezen.
-- `haal_onderdelen_van_scenario_op(verbinding, scenarionaam)`: Filtert onderdelen op scenario.
-- `toon_onderdelenlijst(verbinding)`: Toont volledige bouwinventaris.
-- `voeg_onderdeel_toe(verbinding)`: Registreert nieuw onderdeel.
-- `toon_onderdelen_binnen_budget(verbinding)`: Toont alternatieven binnen budget.
-- `pas_onderdeelprijs_aan(verbinding)`: Past prijs van een gekozen onderdeel aan.
-- `verwijder_onderdeel(verbinding)`: Verwijdert gekozen onderdeel.
-- `haal_alle_onderdelen_op(verbinding)`: Haalt alle onderdelen op inclusief leverancier en scenario.
-- `haal_scenarios_op(verbinding)`: Haalt alle scenario's op.
-- `haal_prijzen_op_van_scenario(verbinding, scenarionaam)`: Haalt prijzen binnen een scenario op.
-- `update_scenariobudget(verbinding, scenarionaam, nieuw_budget)`: Werkt scenariobudget bij.
-- `bereken_spaarplan(verbinding)`: Berekent inkoopritme voor een gekozen onderdeel.
-- `pas_scenariobudget_aan(verbinding)`: Past budget aan op basis van invoer.
-- `toon_overzicht_per_scenario(verbinding)`: Toont statistieken per scenario met budgetcontrole.
-- `check_leverancier_bestaat(verbinding, leveranciernaam)`: Controleert of leverancier bestaat.
-- `scenario_bestaat(verbinding, scenarionaam)`: Controleert of scenario bestaat.
-- `voeg_leverancier_toe(verbinding, leveranciernaam, transportkosten)`: Voegt leverancier toe.
-- `voeg_scenario_toe(verbinding, scenarionaam, budget_limiet)`: Voegt scenario toe.
-- `voeg_onderdeel_toe_aan_db(verbinding, titel, prijs, leverancier_naam, scenario_naam, prio)`: Voegt onderdeel toe vanuit import.
-- `importeer_csv(verbinding)`: Importeert intakebestand en maakt ontbrekende referenties aan.
-- `lees_toegangscode_hash()`: Leest de hash van de toegangscode uit het `.env`-bestand.
-- `controleer_toegangscode()`: Vraagt om een toegangscode, hasht de invoer en vergelijkt deze met `TOEGANGSCODE_HASH` uit het `.env`-bestand.
+[Deze lijst is niet compleet, en de functies moeten nog verdeeld worden over de modules]
 
+- `haal_alle_items_op(verbinding)`: Haalt alle items op inclusief winkel- en lijstnaam via een JOIN-operatie.
+- `haal_lijsten_op(verbinding)`: Haalt alle lijsten op inclusief budget.
+- `update_prijs(verbinding, lijstnaam, titel, nieuwe_prijs)`: Past de prijs van een item aan.
+- `verwijder_item_uit_db(verbinding, lijstnaam, titel)`: Verwijdert een item op basis van lijst en titel.
+- `voeg_item_toe_aan_db(verbinding, titel, prijs, winkel_naam, lijst_naam, prio)`: Voegt een item toe aan de tabel `Item`.
+- `haal_items_binnen_budget(verbinding, min_budget, max_budget)`: Haalt items op binnen een budgetrange.
+- `check_winkel_bestaat(verbinding, winkelnaam)`: Controleert of een winkel bestaat.
+- `toon_beschikbare_verlanglijsten(verbinding)`: Toont beschikbare lijsten voor gebruikerskeuze.
+- `kies_verlanglijst(verbinding)`: Laat de gebruiker een lijst selecteren op nummer.
+- `toon_verlanglijst(verbinding)`: Toont de volledige verlanglijst inclusief totaalprijs per item.
+- `voeg_item_toe(verbinding)`: Registreert handmatig een nieuw item.
+- `toon_items_binnen_budget(verbinding)`: Toont items tussen twee budgetgrenzen.
+- `pas_itemprijs_aan(verbinding)`: Past de prijs van een geselecteerd item aan.
+- `verwijder_item(verbinding)`: Verwijdert een geselecteerd item.
+- `haal_verlanglijst_op(verbinding)`: Haalt items op inclusief winkel- en lijstnaam.
+- `haal_lijsten_op(verbinding)`: Haalt alle lijsten op met budget.
+- `haal_prijzen_op_van_lijst(verbinding, lijstnaam)`: Haalt alle itemprijzen op voor een lijst.
+- `update_lijstbudget(verbinding, lijstnaam, nieuw_budget)`: Werkt het budget van een lijst bij.
+- `bereken_spaarplan(verbinding)`: Toont een persoonlijk spaarplan op basis van itemprijs en maanden.
+- `pas_lijstbudget_aan(verbinding)`: Vraagt een nieuw budget en slaat dit op.
+- `toon_overzicht_per_lijst(verbinding)`: Toont statistieken en budgetcontrole per lijst.
