@@ -1,8 +1,12 @@
-# In dit bestand staat gespecificeerd  welke bestanden en mappen niet naar de  Git-repository moeten worden gecommit.
+# In dit bestand staat gespecificeerd welke bestanden en mappen niet naar de Git-repository moeten worden gecommit.
 # Het gaat om bestanden die een tijdelijk karakter hebben, op elke computer anders zijn of gegenereerd worden of om een andere reden (bijv. security) niet in de repository en/of op de server thuishoren.
 
 # De bestanden voor de virtual environement. Deze kunnen op elke computer anders zijn.
 .venv
+
+# Environment-bestanden met gevoelige gegevens (zoals de hash van de toegangscode).
+.env
+**/.env
 
 # De bestanden die de inhoud van de SQLite-databases bevatten. Deze worden gegenereerd en zijn niet nodig om te delen.
 *.db*

@@ -354,3 +354,58 @@ Met de standaardmodule `os` kan een Python-programma informatie opvragen bij het
 2. In een tweede terminal zoek je met `top` of `ps aux | grep python3` het PID van dit Python-proces op.
 3. Zodra je in de tweede terminal `kill <PID>` uitvoert, stuurt het besturingssysteem een `SIGTERM`-signaal naar het Python-proces.
 4. In de eerste terminal (waar Verlanglijstmanager draaide) stopt het programma onmiddellijk, verschijnt de melding **`Terminated`** (of **`Beeindigd`**), en keert de terminal direct terug naar de normale Linux-opdrachtprompt.
+
+
+---
+
+# Niveau 3, les 7 - Samen & Zelf (Voorbereiding Les 8: .env en Hashing)
+
+## 1. Waarom mag een toegangscode nooit in de broncode staan?
+
+- **Vraag: Waarom is `if toegangscode != "geheim":` in de Python-code niet veilig? Hoe kunnen anderen in de code kijken en de toegangscode zien?**
+  - Python-bestanden (`.py`) zijn gewone tekstbestanden die voor iedereen met toegang tot de map of de Git-repository (zoals GitLab of GitHub) direct te openen en te lezen zijn. Zelfs als je de code later aanpast, blijft de oude toegangscode in de Git-commitgeschiedenis (`git log`) zichtbaar. Daarmee overtreed je direct **C3. Security** (gevoelige gegevens mogen niet zichtbaar zijn in de broncode).
+
+## 2. Het `.env`-bestand uitlezen in Python
+
+- **Vraag: Wat gebeurt er op de regel `return regel.replace('TOEGANGSCODE=', '')`?**
+  - De functie heeft een regel gevonden die begint met `'TOEGANGSCODE='` (bijvoorbeeld `'TOEGANGSCODE=geheim'`). Met `.replace('TOEGANGSCODE=', '')` wordt het voorstuk `'TOEGANGSCODE='` vervangen door een lege string `''`, zodat alleen de waarde achter het `=`-teken (`'geheim'`) overblijft en wordt teruggegeven.
+- **Vraag: Voldoen we met `TOEGANGSCODE=geheim` in `.env` (en `.env` in `.gitignore`) aan de User Concerns C2, C3 en C4? Waarom wel of niet?**
+  - **C2 (Toegangscode bij starten):** Ja, de applicatie vraagt om een toegangscode.
+  - **C3 (Niet zichtbaar in broncode):** Ja, de toegangscode staat niet meer in de `.py`-broncode of in GitLab.
+  - **C4 (Veilig verwerkt en opgeslagen):** **Nee**, nog niet. De toegangscode staat nog als leesbare platte tekst (*plain text*) in het `.env`-bestand op de schijf. Iedereen die op de computer in het `.env`-bestand kijkt, ziet direct het wachtwoord.
+
+---
+
+## 3. Hashing van de toegangscode
+
+### Wat is hashing en hoe werkt het?
+
+- **Hashing** zet een invoer (zoals een wachtwoord of toegangscode) via een wiskundige functie om in een reeks tekens van een vaste lengte: de **hash**.
+- Een goede cryptografische hashfunctie heeft drie belangrijke eigenschappen:
+  1. **Deterministisch:** Dezelfde invoer levert altijd exact dezelfde hash op.
+  2. **Eenrichtingsverkeer (One-way):** Je kunt van een wachtwoord wel de hash berekenen, maar je kunt vanuit de hash **nooit** terugrekenen wat het oorspronkelijke wachtwoord was.
+  3. **Avalanche-effect:** Als er maar 1 letter in de invoer verandert, ziet de hele hash er compleet anders uit.
+
+### Verschil tussen hashing en encryptie
+
+- **Encryptie (versleuteling)** is **tweerichtingsverkeer**: je versleutelt data met een sleutel zodat je het later met een sleutel weer kunt ontsleutelen naar de originele tekst (bijvoorbeeld bij HTTPS-verkeer of het versleutelen van een harde schijf).
+- **Hashing** is **eenrichtingsverkeer**: er is geen sleutel om een hash weer terug te draaien naar de originele tekst. Om een wachtwoord te controleren, hash je het zojuist ingetypte wachtwoord opnieuw en vergelijk je de twee hashes met elkaar.
+
+### Drie voorbeelden van veelgebruikte hash-algoritmes
+
+1. **SHA-256 (Secure Hash Algorithm 256-bit):**
+   - Maakt altijd een hash van 64 hexadecimale tekens (256 bits).
+   - **Toepassing:** Controleren of gedownloade bestanden niet aangepast zijn (checksums), digitale handtekeningen, en in ons project het hashen van de toegangscode met `hashlib.sha256(...).hexdigest()` voor opslag in het `.env`-bestand.
+2. **bcrypt:**
+   - Een hash-algoritme dat speciaal voor wachtwoorden is ontworpen. Het voegt automatisch een *salt* (willekeurige extra tekens) toe en is bewust traag gemaakt.
+   - **Toepassing:** Wachtwoordopslag in webapplicaties en databases, zodat aanvallers niet miljoenen wachtwoorden per seconde kunnen raden (*brute-force*).
+3. **Argon2:**
+   - De moderne winnaar van de Password Hashing Competition. Gebruikt naast CPU-tijd ook een instelbare hoeveelheid RAM-geheugen om aanvallen met snelle videokaarten (GPUs) tegen te gaan.
+   - **Toepassing:** Moderne authenticatiesystemen en wachtwoordmanagers.
+
+### Vraag: Voldoen we met `TOEGANGSCODE_HASH` in `.env` nu wel aan C2, C3 en C4?
+
+- **Ja, nu voldoen we aan alle drie de User Concerns:**
+  - **C2:** De gebruiker moet bij het opstarten een geldige toegangscode invoeren voordat het menu verschijnt.
+  - **C3:** De toegangscode staat niet in de broncode en `.env` staat in `.gitignore`, waardoor er niets in GitLab komt.
+  - **C4:** De toegangscode wordt niet als platte tekst opgeslagen, maar als SHA-256 hash in `.env` bewaard en tijdens het inloggen via hashing gecontroleerd. 
