@@ -140,6 +140,27 @@ WHERE titel LIKE '%a%';
 SELECT *
 FROM Item
 WHERE titel LIKE '_____';
+```
+
+**3. IN oefening:**
+```sql
+-- Alle items die bij 'Bol.com', 'Coolblue' of 'MediaMarkt' te koop zijn
+SELECT *
+FROM Item
+WHERE winkel IN ('Bol.com', 'Coolblue', 'MediaMarkt');
+```
+
+**4. Gecombineerde oefening:**
+```sql
+-- Alle items uit 'Elektronica' of 'Boeken' met een prijs tussen 10 en 50 euro en 'a' in de naam
+SELECT *
+FROM Item
+WHERE lijst IN ('Elektronica', 'Boeken')
+  AND prijs BETWEEN 10 AND 50
+  AND titel LIKE '%a%';
+```
+
+---
 
 ## Voorbereiding Les 6 - UC7, UC8 en INNER JOIN over drie tabellen
 
@@ -285,7 +306,23 @@ SELECT Lijst.naam AS lijstnaam, COUNT(Item.titel) AS aantal_items
 FROM Lijst
 INNER JOIN Item ON Item.lijst = Lijst.naam
 GROUP BY Lijst.naam;
+```
 
+2. **Geef van elke lijst de lijstnaam, de budget_limiet en het totaalbedrag van alle items in die lijst (zonder verzendkosten). Lijsten zonder items hoeven niet getoond.**
+```sql
+SELECT Lijst.naam AS lijstnaam, Lijst.budget_limiet, SUM(Item.prijs) AS totaalbedrag
+FROM Lijst
+INNER JOIN Item ON Item.lijst = Lijst.naam
+GROUP BY Lijst.naam, Lijst.budget_limiet;
+```
+
+3. **Geef van elke winkel de winkelnaam en het gemiddelde bedrag van alle items in die winkel inclusief verzendkosten. Winkels zonder items hoeven niet getoond.**
+```sql
+SELECT Winkel.naam AS winkelnaam, AVG(Item.prijs + Winkel.verzendkosten) AS gemiddeld_bedrag_incl_verzending
+FROM Winkel
+INNER JOIN Item ON Item.winkel = Winkel.naam
+GROUP BY Winkel.naam;
+```
 
 ---
 
@@ -300,7 +337,7 @@ GROUP BY Lijst.naam;
 3. **Welke oplossing is efficienter? Waarom?**
    - De **eerste oplossing** (met 1 `JOIN`- en `GROUP BY`-query) is veel efficienter. De database-engine is speciaal geoptimaliseerd om tabellen te koppelen en sommen te berekenen, en Python hoeft maar 1 keer met de database te communiceren in plaats van `1 + N` keer.
 4. **Ben jij meer een database- of een Python-programmeur? Waarom?**
-   - Ik combineer het liefst beide: rekenwerk over tabellen (zoals filteren met `WHERE`, koppelen met `JOIN` en groeperen met `GROUP BY`) laat ik door de database doen, en de gebruikersinteractie (menuss, validatie en weergave) programmeer ik in Python.
+   - Ik combineer het liefst beide: rekenwerk over tabellen (zoals filteren met `WHERE`, koppelen met `JOIN` en groeperen met `GROUP BY`) laat ik door de database doen, en de gebruikersinteractie (menu's, validatie en weergave) programmeer ik in Python.
 
 ---
 
@@ -310,10 +347,42 @@ GROUP BY Lijst.naam;
 
 1. **USB-stick doorgeven aan de VM:** Koppel in het menu van je Virtual Machine (bijv. VirtualBox -> *Devices* -> *USB*) de ingeplugde USB-stick aan de Linux-VM.
 2. **Schijven en partities bekijken:**
-   ```bash
-   lsblk
-    ```
+```bash
+lsblk
+```
+   Hiermee zie je alle schijven en partities, bijvoorbeeld `sdb` (de USB-stick zelf) en `sdb1` (de eerste partitie op de USB-stick).
+3. **Mountpunt aanmaken en USB-stick mounten:**
+```bash
+sudo mkdir -p /mnt/usb
+sudo mount /dev/sdb1 /mnt/usb
+```
+4. **Bestanden bekijken en kopieren:**
+```bash
+ls -la /mnt/usb
+cp niveau3/voorbeeld-verlanglijstmanager/data/items.csv /mnt/usb/
+```
+5. **Veilig ontkoppelen (unmounten):**
+```bash
+sudo umount /mnt/usb
+```
 
+### Antwoorden op de verdiepingsvragen over Linux-opslag
+
+- **Waarom moet al dat mount-gedoe? In Windows hoeft het niet!**
+  - Windows doet op de achtergrond precies hetzelfde en koppelt een USB-stick automatisch aan een schijfletter zoals `D:\` of `E:\`. Linux gebruikt geen schijfletters, maar 1 grote mappenboom die begint bij `/`. Met *mounten* hang je het bestandssysteem van de USB-stick aan een map (zoals `/mnt/usb` of `/media/gebruiker/usb`) binnen die boom.
+- **Kan het niet automatisch in mijn Linux VM?**
+  - Ja, een grafische Linux-omgeving (zoals Xubuntu of Fedora Workstation) mount een USB-stick meestal automatisch onder `/media/<gebruikersnaam>/<sticknaam>` zodra je er in de bestandsverkenner op klikt. In een serveromgeving zonder grafische schil doe je het handmatig met `mount`.
+- **Wat zijn al die `loop`-schijven in mijn VM?**
+  - `loop`-devices (zoals `loop0`, `loop1`) zijn virtuele schijven waarmee Linux een los bestand (zoals een `.iso` of een *Snap*-pakket in Ubuntu) behandelt alsof het een aparte schijf is.
+- **Wat is het verschil tussen een partitie en een bestandssysteem?**
+  - Een **partitie** (`sdb1`) is een afgebakend stukje opslagruimte op een fysieke schijf (de "kavel"). Een **bestandssysteem** (zoals FAT32, exFAT, NTFS of ext4) is de indeling op die partitie die bijhoudt hoe bestanden, namen en mappen worden opgeslagen (de "inrichting").
+
+### UTF-8 en de betekenis van 文字化け (Mojibake)
+
+- **Wat is UTF-8 en waarom is tekencodering belangrijk?**
+  - Computers slaan alles op als nullen en enen (bytes). Een tekencodering spreekt af welk getal bij welk teken hoort. Oudere coderingen zoals ASCII kenden alleen Engelse letters en cijfers (128 tekens). **UTF-8** is de wereldwijde standaard voor Unicode-tekst: gewone ASCII-tekens kosten 1 byte, en speciale tekens (zoals `e` met trema, het euroteken of Japanse tekens) gebruiken 2 tot 4 bytes. Als je in Python een bestand opent met `encoding="utf-8"`, weet je zeker dat speciale tekens op elk besturingssysteem hetzelfde worden ingelezen.
+- **Historische context van 文字化け (Mojibake):**
+  - *Mojibake* (letterlijk Japans voor "karakter-vervorming") ontstond toen verschillende systemen elk hun eigen tekencodering gebruikten (zoals Shift-JIS en EUC-JP in Japan, of Windows-1252 en ISO-8859-1 in Europa). Als een bestand in de ene codering werd opgeslagen en door een ander programma met een andere codering werd geopend, verschenen er vreemde onleesbare tekens op het scherm. De komst van UTF-8 lost dit probleem op door 1 universele standaard te bieden.
 
 ---
 
@@ -339,10 +408,10 @@ Met de standaardmodule `os` kan een Python-programma informatie opvragen bij het
 ## 2. Processen bekijken en beheren in Linux (`ps`, `top` en `kill`)
 
 - Een **proces** is een programma dat op dat moment in uitvoering is. Elk proces krijgt van de kernel een uniek **PID** (*Process ID*).
-- Handige Linux-commandos voor procesbeheer:
+- Handige Linux-commando's voor procesbeheer:
   - `ps aux` of `ps -ef`: Toont een momentopname van alle draaiende processen.
   - `top`: Toont een interactief real-time overzicht van alle processen, CPU-gebruik en geheugengebruik (afsluiten met `q`).
-  - `kill <PID>`: Stuurt een beindigingssignaal (`SIGTERM`) naar het proces met het opgegeven PID.
+  - `kill <PID>`: Stuurt een beeindigingssignaal (`SIGTERM`) naar het proces met het opgegeven PID.
 
 ### Vraag: Met welk Windows-onderdeel is `top` te vergelijken?
 
@@ -354,7 +423,6 @@ Met de standaardmodule `os` kan een Python-programma informatie opvragen bij het
 2. In een tweede terminal zoek je met `top` of `ps aux | grep python3` het PID van dit Python-proces op.
 3. Zodra je in de tweede terminal `kill <PID>` uitvoert, stuurt het besturingssysteem een `SIGTERM`-signaal naar het Python-proces.
 4. In de eerste terminal (waar Verlanglijstmanager draaide) stopt het programma onmiddellijk, verschijnt de melding **`Terminated`** (of **`Beeindigd`**), en keert de terminal direct terug naar de normale Linux-opdrachtprompt.
-
 
 ---
 
@@ -400,7 +468,7 @@ Met de standaardmodule `os` kan een Python-programma informatie opvragen bij het
    - Een hash-algoritme dat speciaal voor wachtwoorden is ontworpen. Het voegt automatisch een *salt* (willekeurige extra tekens) toe en is bewust traag gemaakt.
    - **Toepassing:** Wachtwoordopslag in webapplicaties en databases, zodat aanvallers niet miljoenen wachtwoorden per seconde kunnen raden (*brute-force*).
 3. **Argon2:**
-   - De moderne winnaar van de Password Hashing Competition. Gebruikt naast CPU-tijd ook een instelbare hoeveelheid RAM-geheugen om aanvallen met snelle videokaarten (GPUs) tegen te gaan.
+   - De moderne winnaar van de Password Hashing Competition. Gebruikt naast CPU-tijd ook een instelbare hoeveelheid RAM-geheugen om aanvallen met snelle videokaarten (GPU's) tegen te gaan.
    - **Toepassing:** Moderne authenticatiesystemen en wachtwoordmanagers.
 
 ### Vraag: Voldoen we met `TOEGANGSCODE_HASH` in `.env` nu wel aan C2, C3 en C4?
@@ -409,7 +477,6 @@ Met de standaardmodule `os` kan een Python-programma informatie opvragen bij het
   - **C2:** De gebruiker moet bij het opstarten een geldige toegangscode invoeren voordat het menu verschijnt.
   - **C3:** De toegangscode staat niet in de broncode en `.env` staat in `.gitignore`, waardoor er niets in GitLab komt.
   - **C4:** De toegangscode wordt niet als platte tekst opgeslagen, maar als SHA-256 hash in `.env` bewaard en tijdens het inloggen via hashing gecontroleerd.
-
 
 ---
 
@@ -451,6 +518,15 @@ chmod 600 .env
 ls -la .env
 ```
 
+- `6` (`rw-`) voor de eigenaar (alleen jijzelf mag lezen en schrijven), en `0` (`---`) voor groep en anderen (`-rw-------`).
+
+---
+
+## 3. Integratiecheck en Sprint Review (Verlanglijstmanager & QuestComposer)
+
+- Alle 10 de Use Cases zijn in beide projecten geimplementeerd, opgesplitst in de 5 modules uit `ontwerp.md` en getest in `testresultaat.md`.
+- **Demo Verlanglijstmanager (Skyler Hoekstra):** Overzicht en budgetbewaking per lijst inclusief verzendkosten (UC7) en snel CSV-bestanden importeren vanaf een USB-stick (UC9).
+- **Demo QuestComposer (Robin Vermeer):** Haalbaarheidsoverzicht per scenario inclusief transportkosten (UC7) en toegangsbeveiliging bij het opstarten via `.env` en hashing (UC10).
 
 ---
 
@@ -489,4 +565,4 @@ except ValueError:
 
 De user stories die ik met de kennis tot nu toe nog niet kan programmeren gaan over het maken van grafieken en diagrammen (met `matplotlib`):
 - **Klaskompas:** US5 / UC8 (staafdiagram van hoe ver studenten van school wonen) en US12 / UC9 (taartdiagram van populaire hobby's).
-- **Oosteling:** US8 (staafdiagram met het aantal onderhoudsbeurten per attractie) en US9 (taartdiagram met het aantal onderhoudsbeurten per onderhoudstype). 
+- **Oosteling:** US8 (staafdiagram met het aantal onderhoudsbeurten per attractie) en US9 (taartdiagram met het aantal onderhoudsbeurten per onderhoudstype).
