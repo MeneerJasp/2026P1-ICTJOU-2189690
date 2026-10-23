@@ -1,12 +1,11 @@
 # Globale variabelen om statistieken bij te houden
 sessiestatistieken = {
-    'toegevoegd': 0,
-    'verwijderd': 0,
+    "toegevoegd": 0,
+    "verwijderd": 0,
 }
 
 
 # ==== Use Case functies ====
-
 
 def voeg_onderdeel_toe(verbinding):
     """UC1: Voegt een nieuw onderdeel toe aan een scenario. Controleert of de opgegeven leverancier en het scenario bestaan voordat het onderdeel wordt toegevoegd."""
@@ -23,7 +22,7 @@ def voeg_onderdeel_toe(verbinding):
     prio = int(input("Prioriteit (1-3): "))
     prio = max(1, min(prio, 3))
     voeg_onderdeel_toe_aan_db(verbinding, titel, prijs, leveranciernaam, scenarionaam, prio)
-    sessiestatistieken['toegevoegd'] += 1
+    sessiestatistieken["toegevoegd"] += 1
     print(f"Puzzelonderdeel succesvol geregistreerd! (totaal deze sessie: {sessiestatistieken['toegevoegd']})")
 
 
@@ -49,7 +48,11 @@ def pas_onderdeelprijs_aan(verbinding):
 
     gekozen_onderdeel = onderdelen[keuze - 1]
     nieuwe_prijs = float(input("Voer de nieuwe prijs in: ").replace(",", "."))
-    update_prijs(verbinding, gekozen_onderdeel['scenarionaam'], gekozen_onderdeel['titel'], nieuwe_prijs)
+    if nieuwe_prijs < 0:
+        print("Ongeldige prijs.")
+        return
+
+    update_prijs(verbinding, gekozen_onderdeel["scenarionaam"], gekozen_onderdeel["titel"], nieuwe_prijs)
     print("Kostprijs succesvol bijgewerkt!")
 
 
@@ -61,23 +64,21 @@ def verwijder_onderdeel(verbinding):
 
     onderdelen = haal_onderdelen_van_scenario_op(verbinding, scenarionaam)
     if not onderdelen:
-        print("Er zijn geen onderdelen in dit scenario om te verwijderen.")
+        print("Er zijn geen onderdelen in dit scenario.")
         return
 
-    print("Kies een puzzelonderdeel:")
     for volgnummer, onderdeel in enumerate(onderdelen, start=1):
-        print(f"{volgnummer}. [{onderdeel['scenarionaam']}] {onderdeel['titel']} - EUR {onderdeel['prijs']:.2f}")
+        print(f"{volgnummer}. {onderdeel['titel']} - EUR {onderdeel['prijs']:.2f}")
 
-    keuze = int(input("Voer het nummer van het onderdeel in: "))
+    keuze = int(input("Welk onderdeel wil je verwijderen? (nummer): "))
     if keuze < 1 or keuze > len(onderdelen):
         print("Ongeldige keuze.")
         return
 
-    gekozen_onderdeel = onderdelen[keuze - 1]
-    verwijder_onderdeel_uit_db(verbinding, gekozen_onderdeel['scenarionaam'], gekozen_onderdeel['titel'])
-
-    sessiestatistieken['verwijderd'] += 1
-    print(f"Puzzelonderdeel succesvol verwijderd! (totaal deze sessie: {sessiestatistieken['verwijderd']})")
+    titel = onderdelen[keuze - 1]["titel"]
+    verwijder_onderdeel_uit_db(verbinding, scenarionaam, titel)
+    sessiestatistieken["verwijderd"] += 1
+    print("Onderdeel succesvol verwijderd!")
 
 
 def toon_onderdelen_binnen_budget(verbinding):
@@ -85,7 +86,6 @@ def toon_onderdelen_binnen_budget(verbinding):
     grens1 = float(input("Voer de eerste budgetgrens in: ").replace(",", "."))
     grens2 = float(input("Voer de tweede budgetgrens in: ").replace(",", "."))
 
-    # Laagste en hoogste grens automatisch bepalen.
     min_budget = min(grens1, grens2)
     max_budget = max(grens1, grens2)
 
@@ -100,7 +100,6 @@ def toon_onderdelen_binnen_budget(verbinding):
 
 
 # === Helper functies ===
-
 
 def toon_beschikbare_scenarios(verbinding):
     """Toont alle beschikbare scenario's en geeft ze terug."""
@@ -126,7 +125,7 @@ def kies_scenario(verbinding):
         print("Ongeldige keuze.")
         return None
 
-    return scenarios[keuze - 1]['naam']
+    return scenarios[keuze - 1]["naam"]
 
 
 def toon_onderdelenlijst(verbinding):
@@ -135,12 +134,11 @@ def toon_onderdelenlijst(verbinding):
     print(f"{'Scenario':<15} | {'Puzzelonderdeel':<20} | {'Leverancier':<15} | {'Totale kost':<12} | {'Urgentie'}")
     print("-----------------------------------------------------------------------------------")
     for row in onderdelen:
-        totaal = float(row['prijs']) + float(row['transportkosten'])
+        totaal = float(row["prijs"]) + float(row["transportkosten"])
         print(f"{row['scenarionaam']:<15} | {row['titel']:<20} | {row['leveranciernaam']:<15} | EUR {totaal:<8} | {row['prioriteit']}")
 
 
 # ==== Databasefuncties ====
-
 
 def haal_alle_onderdelen_op(verbinding):
     """Haalt onderdelen op inclusief leverancier- en scenarionaam."""

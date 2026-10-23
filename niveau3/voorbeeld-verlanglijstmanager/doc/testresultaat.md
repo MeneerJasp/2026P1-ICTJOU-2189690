@@ -21,8 +21,8 @@ De tests zijn uitgevoerd op een versgeimporteerde database (via `db/creates.sql`
 | TC8: Persoonlijk spaarplan berekenen (UC6) | Geslaagd |
 | TC9: Toon overzicht lijsten (UC7) | Geslaagd |
 | TC10: Afsluiten en sessiestatistieken tonen (UC8) | Geslaagd |
-| TC11: Import CSV items (UC9) | Nog te testen in Increment 3 |
+| TC11: Import CSV items (UC9) | Geslaagd |
 
 ## Conclusie
 
-10 van de 10 geteste testcases van Increment 1 en Increment 2 (UC1 t/m UC8) zijn geslaagd. De applicatie verwerkt itemtoevoeging, verwijdering, prijsaanpassingen, budgetgebaseerd zoeken, spaarplanberekening, het statistiekenoverzicht per lijst en de sessiestatistieken bij het afsluiten correct.
+11 van de 11 geteste testcases (UC1 t/m UC9) zijn geslaagd. De applicatie verwerkt itemtoevoeging, verwijdering, prijsaanpassingen, budgetgebaseerd zoeken, spaarplanberekening, het statistiekenoverzicht per lijst, de sessiestatistieken en de CSV-import inclusief het automatisch aanmaken van ontbrekende winkels en lijsten correct.

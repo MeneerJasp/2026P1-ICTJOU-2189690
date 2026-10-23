@@ -1,10 +1,9 @@
 # ==== Use Case functies ====
 
-
 def pas_scenariobudget_aan(verbinding):
     """UC3: Past het budgetlimiet van een scenario aan op basis van de gebruikersinvoer."""
     scenarios = haal_scenarios_op(verbinding)
-    if not scenarios:
+    if len(scenarios) == 0:
         print("Er zijn geen scenario's beschikbaar.")
         return
 
@@ -17,8 +16,11 @@ def pas_scenariobudget_aan(verbinding):
         print("Ongeldige keuze.")
         return
 
-    scenarionaam = scenarios[keuze - 1]['naam']
+    scenarionaam = scenarios[keuze - 1]["naam"]
     nieuw_budget = float(input("Voer het nieuwe budget in: ").replace(",", "."))
+    if nieuw_budget < 0:
+        print("Ongeldig budget.")
+        return
 
     update_scenariobudget(verbinding, scenarionaam, nieuw_budget)
     print("Scenariobudget succesvol bijgewerkt!")
@@ -27,37 +29,62 @@ def pas_scenariobudget_aan(verbinding):
 def bereken_spaarplan(verbinding):
     """UC6: Bereken een inkoopritme voor een gekozen sleutelonderdeel op basis van de prijs en het aantal maanden."""
     onderdelen = haal_alle_onderdelen_op(verbinding)
-    if not onderdelen:
+    if len(onderdelen) == 0:
         print("Er zijn geen onderdelen beschikbaar voor een inkoopritme.")
         return
 
     for volgnummer, onderdeel in enumerate(onderdelen, start=1):
         print(f"{volgnummer}. [{onderdeel['scenarionaam']}] {onderdeel['titel']} - EUR {onderdeel['prijs']:.2f}")
 
-    keuze = int(input("Voor welk sleutelonderdeel wil je een inkoopritme? (nummer): "))
+    keuze = int(input("Voor welk onderdeel wil je een inkoopritme? (nummer): "))
     if keuze < 1 or keuze > len(onderdelen):
         print("Ongeldige keuze.")
         return
 
     gekozen_onderdeel = onderdelen[keuze - 1]
-    prijs = float(gekozen_onderdeel['prijs'])
+    prijs = float(gekozen_onderdeel["prijs"])
 
-    maanden = int(input("Over hoeveel maanden wil je dit onderdeel operationeel hebben? "))
+    maanden = int(input("Over hoeveel maanden wil je dit inkopen? "))
+    if maanden <= 0:
+        print("Ongeldig aantal maanden.")
+        return
 
     print(f"Inkoopritme voor {gekozen_onderdeel['titel']} ({gekozen_onderdeel['scenarionaam']}):")
     for maand in range(1, maanden + 1):
         gespaard = (prijs / maanden) * maand
-        print(f"Maand {maand}: Opgebouwd budget: EUR {gespaard:.2f}")
+        print(f"Maand {maand}: Opgebouwd budget: EUR {gespaard}")
 
 
 def toon_overzicht_per_scenario(verbinding):
     """UC7: Toont een overzicht van onderdelen per scenario inclusief statistieken, totaalbedrag, transportkosten en budgetcontrole."""
     scenariostatistieken = haal_scenariostatistieken_op(verbinding)
-    pass
+    if not scenariostatistieken:
+        print("Er zijn geen onderdelen beschikbaar voor overzicht per scenario.")
+        return
+
+    for rij in scenariostatistieken:
+        scenarionaam = rij["scenarionaam"]
+        budget_limiet = rij["budget_limiet"]
+        aantal_onderdelen = rij["aantal_onderdelen"]
+        goedkoopste_onderdeel = rij["goedkoopste_onderdeel"]
+        duurste_onderdeel = rij["duurste_onderdeel"]
+        gemiddelde_prijs = rij["gemiddelde_prijs"]
+        totaalbedrag_onderdelen = rij["totaalbedrag_onderdelen"]
+        totaalbedrag_inclusief_transportkosten = rij["totaalbedrag_inclusief_transportkosten"]
+
+        print("\033[1m" + "=== " + scenarionaam + " ===" + "\033[0m")
+        print("Aantal onderdelen: " + str(aantal_onderdelen))
+        print("Goedkoopste onderdeel: " + str(goedkoopste_onderdeel))
+        print("Duurste onderdeel: " + str(duurste_onderdeel))
+        print("Gemiddelde prijs: " + str(gemiddelde_prijs))
+        print("Totaalbedrag (onderdelen): " + str(totaalbedrag_onderdelen))
+        print("Totaalbedrag (incl. transportkosten): " + str(totaalbedrag_inclusief_transportkosten))
+        print("Budget: " + str(budget_limiet))
+        if totaalbedrag_inclusief_transportkosten > budget_limiet:
+            print("\033[91m" + "LET OP: het scenario is financieel niet haalbaar binnen huidig budget!" + "\033[0m")
 
 
 # ==== Databasefuncties ====
-
 
 def haal_alle_onderdelen_op(verbinding):
     """Haalt onderdelen op inclusief leverancier- en scenarionaam."""

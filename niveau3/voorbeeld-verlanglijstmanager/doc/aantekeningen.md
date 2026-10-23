@@ -285,3 +285,72 @@ SELECT Lijst.naam AS lijstnaam, COUNT(Item.titel) AS aantal_items
 FROM Lijst
 INNER JOIN Item ON Item.lijst = Lijst.naam
 GROUP BY Lijst.naam;
+
+
+---
+
+# Niveau 3, les 6 - Samen & Zelf + Voorbereiding Les 7
+
+## 1. Samen nadenken over de les (SQL GROUP BY vs. Python-loop)
+
+1. **Hoeveel SQL-queries worden er in de tweede oplossing uitgevoerd?**
+   - Er worden **`1 + N`** SQL-queries uitgevoerd, waarbij `N` het aantal lijsten in de tabel `Lijst` is. Eerst wordt 1 query uitgevoerd om alle lijsten op te halen, en daarna wordt in de `for`-loop voor elke lijst nog eens een aparte `SELECT`-query uitgevoerd (bij 10 lijsten dus 11 queries; bij 1000 lijsten 1001 queries).
+2. **Welke oplossing vind je makkelijker? Waarom?**
+   - De tweede oplossing oogt voor een beginnende Python-programmeur vaak simpeler omdat de `SELECT`-queries heel kort zijn, maar de eerste oplossing is uiteindelijk overzichtelijker zodra je `JOIN` en `GROUP BY` kent, omdat je in Python alleen nog maar de resultaten hoeft te printen.
+3. **Welke oplossing is efficienter? Waarom?**
+   - De **eerste oplossing** (met 1 `JOIN`- en `GROUP BY`-query) is veel efficienter. De database-engine is speciaal geoptimaliseerd om tabellen te koppelen en sommen te berekenen, en Python hoeft maar 1 keer met de database te communiceren in plaats van `1 + N` keer.
+4. **Ben jij meer een database- of een Python-programmeur? Waarom?**
+   - Ik combineer het liefst beide: rekenwerk over tabellen (zoals filteren met `WHERE`, koppelen met `JOIN` en groeperen met `GROUP BY`) laat ik door de database doen, en de gebruikersinteractie (menuss, validatie en weergave) programmeer ik in Python.
+
+---
+
+## 2. Voorbereiding op Les 7: USB-stick in Linux en UTF-8
+
+### USB-stick gebruiken en mounten in een Linux VM
+
+1. **USB-stick doorgeven aan de VM:** Koppel in het menu van je Virtual Machine (bijv. VirtualBox -> *Devices* -> *USB*) de ingeplugde USB-stick aan de Linux-VM.
+2. **Schijven en partities bekijken:**
+   ```bash
+   lsblk
+    ```
+
+
+---
+
+# Niveau 3, les 7 - Werking van een Operating System en Processen
+
+## 1. De Python-module `os`
+
+Met de standaardmodule `os` kan een Python-programma informatie opvragen bij het besturingssysteem en werken met mappen en bestanden:
+
+- `os.name`: Geeft de naam van de besturingssysteem-familie terug.
+- `os.getcwd()`: Geeft de huidige werkmap (*current working directory*) terug.
+- `os.listdir()`: Geeft een lijst met alle bestanden en mappen in de huidige werkmap.
+- `os.cpu_count()`: Geeft het aantal beschikbare logische processorkernen (cores) terug.
+- `os.getpid()`: Geeft het unieke **PID** (*Process ID*) van het huidige draaiende Python-proces terug.
+
+### Vraag: Waarom geeft `os.name` `'posix'` terug in Linux? Wat geeft het terug in Windows?
+
+- **In Linux (en macOS):** `os.name` geeft `'posix'` terug. **POSIX** (*Portable Operating System Interface*) is een familie van standaarden voor Unix-achtige besturingssystemen. Omdat Linux deze standaard volgt voor processen, bestanden en rechten, valt Linux onder `'posix'`.
+- **In Windows:** `os.name` geeft `'nt'` terug. Dat verwijst naar de **Windows NT**-architectuur (*New Technology*) waarop alle moderne versies van Windows zijn gebouwd.
+
+---
+
+## 2. Processen bekijken en beheren in Linux (`ps`, `top` en `kill`)
+
+- Een **proces** is een programma dat op dat moment in uitvoering is. Elk proces krijgt van de kernel een uniek **PID** (*Process ID*).
+- Handige Linux-commandos voor procesbeheer:
+  - `ps aux` of `ps -ef`: Toont een momentopname van alle draaiende processen.
+  - `top`: Toont een interactief real-time overzicht van alle processen, CPU-gebruik en geheugengebruik (afsluiten met `q`).
+  - `kill <PID>`: Stuurt een beindigingssignaal (`SIGTERM`) naar het proces met het opgegeven PID.
+
+### Vraag: Met welk Windows-onderdeel is `top` te vergelijken?
+
+- `top` is in Windows direct te vergelijken met **Taakbeheer** (*Task Manager*, te openen met `Ctrl+Shift+Esc`).
+
+### Opdracht: Wat gebeurt er als je Verlanglijstmanager beeindigt met `kill <PID>`?
+
+1. Wanneer je `python3 niveau3/voorbeeld-verlanglijstmanager/src/verlanglijstmanager.py` start, wacht het programma op invoer in het menu (`Maak een keuze: `).
+2. In een tweede terminal zoek je met `top` of `ps aux | grep python3` het PID van dit Python-proces op.
+3. Zodra je in de tweede terminal `kill <PID>` uitvoert, stuurt het besturingssysteem een `SIGTERM`-signaal naar het Python-proces.
+4. In de eerste terminal (waar Verlanglijstmanager draaide) stopt het programma onmiddellijk, verschijnt de melding **`Terminated`** (of **`Beeindigd`**), en keert de terminal direct terug naar de normale Linux-opdrachtprompt.
