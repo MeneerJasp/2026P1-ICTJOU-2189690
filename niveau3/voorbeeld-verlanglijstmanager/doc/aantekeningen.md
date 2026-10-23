@@ -140,3 +140,47 @@ WHERE titel LIKE '%a%';
 SELECT *
 FROM Item
 WHERE titel LIKE '_____';
+
+## Voorbereiding Les 6 - UC7, UC8 en INNER JOIN over drie tabellen
+
+### Vergelijking UC7 en UC8 (Verlanglijstmanager vs QuestComposer)
+
+**Use Case 7 (Uitgaven per lijst inzien vs Haalbaarheid per scenario inzien):**
+- **Hetzelfde:** Beide use cases tonen per groep (lijst of scenario) het aantal items/onderdelen, de laagste prijs, de hoogste prijs, de gemiddelde prijs, het totaalbedrag inclusief bijkomende kosten (verzendkosten of transportkosten), het budget en een waarschuwing als het budget wordt overschreden.
+- **Anders:** De entiteiten en termen verschillen: Verlanglijstmanager gebruikt `Lijst`, `Item` en `Winkel` (met `verzendkosten`), terwijl QuestComposer `Scenario`, `Onderdeel` en `Leverancier` (met `transportkosten`) gebruikt.
+- **Benodigde SQL-SELECT-componenten:** `SELECT`, aggregatiefuncties (`COUNT`, `MIN`, `MAX`, `AVG`, `SUM`), `JOIN` over drie tabellen, `GROUP BY` en `ORDER BY`.
+
+**Use Case 8 (Afsluiten met sessiestatistieken):**
+- **Hetzelfde:** Beide tonen bij het kiezen van optie 8 een afsluitbericht, het aantal toegevoegde en verwijderde items/onderdelen tijdens de huidige sessie, en sluiten daarna het programma af.
+- **Anders:** Alleen de tekst van het afsluitbericht en het woord "items" vs "onderdelen".
+- **Soort Python-variabelen:** Een **globale variabele** (bijvoorbeeld een dictionary `sessiestatistieken = {'toegevoegd': 0, 'verwijderd': 0}`), zodat de tellers gedurende de hele sessie bewaard blijven en vanuit meerdere functies/modules aangepast en uitgelezen kunnen worden.
+
+### Vragen bij INNER JOIN over drie tabellen (Muziekdatabase)
+
+**Voorbeeld 1 (join tussen A en B en tussen B en C: `Stuk` -> `Componist` -> `Muziekschool`):**
+- **Waarom staat alleen bij `B.naam`, `B.schoolId` en `C.naam` de alias ervoor?**
+  Omdat de kolomnamen `naam` en `schoolId` in meerdere gekoppelde tabellen voorkomen (`Componist` en `Muziekschool` hebben allebei een kolom `naam` en `schoolId`). Zonder alias weet SQL niet welke kolom je bedoelt. De andere kolommen (`stuknr`, `titel`, `plaatsnaam`) komen maar in een tabel voor.
+- **Wat gebeurt er als een componist geen `schoolId` heeft (`NULL`)?**
+  Dan worden die componist en alle stukken van die componist **niet** getoond in het resultaat, omdat een `INNER JOIN` alleen rijen toont die in alle gekoppelde tabellen een overeenkomst hebben.
+
+**Voorbeeld 2 (join tussen A en B en tussen A en C: `Stuk` -> `Componist` en `Stuk` -> `Niveau`):**
+- **Waarom staat alleen bij `A.niveaucode` de alias ervoor?**
+  Omdat `niveaucode` zowel in tabel `Stuk` (`A`) als in tabel `Niveau` (`C`) voorkomt. De overige gevraagde kolommen komen in deze drie tabellen maar een keer voor (`Componist` heeft `naam`, `Niveau` heeft `omschrijving`).
+- **Wat gebeurt er als een stuk geen `niveaucode` heeft (`NULL`)?**
+  Dan wordt dat stuk **niet** getoond in het resultaat, omdat `INNER JOIN Niveau` vereist dat `A.niveaucode` overeenkomt met een bestaande `C.niveaucode`.
+
+### Opdracht: SELECT query over drie tabellen voor Verlanglijstmanager
+
+> Geef van alle items de titel, de prijs, de lijstnaam, de winkelnaam en van de lijst de bijbehorende budget_limiet en van de winkel de verzendkosten.
+
+```sql
+SELECT
+    Item.titel,
+    Item.prijs,
+    Item.lijst AS lijstnaam,
+    Item.winkel AS winkelnaam,
+    Lijst.budget_limiet,
+    Winkel.verzendkosten
+FROM Item
+INNER JOIN Lijst ON Item.lijst = Lijst.naam
+INNER JOIN Winkel ON Item.winkel = Winkel.naam;
