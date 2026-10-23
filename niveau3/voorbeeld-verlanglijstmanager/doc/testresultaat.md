@@ -16,7 +16,7 @@ De tests zijn uitgevoerd op een versgeimporteerde database (via `db/creates.sql`
 | TC3: Voeg item toe (lijst niet bestaand) | Geslaagd |
 | TC4: Prijs aanpassen (succesvol) | Geslaagd |
 | TC5: Item verwijderen (succesvol) | Geslaagd |
-| TC6: Zoeken op budget | Nog niet getest |
+| TC6: Zoeken op budget | Geslaagd |
 | TC7: Pas lijstbudget aan | Geslaagd |
 | TC8: Toon volledige verlanglijst | Nog niet getest |
 | TC9: Toon overzicht lijsten | Nog niet getest |
@@ -24,4 +24,4 @@ De tests zijn uitgevoerd op een versgeimporteerde database (via `db/creates.sql`
 
 ## Conclusie
 
-6 van de 6 uitgevoerde testcases voor Use Case 1 t/m 4 zijn geslaagd. De applicatie verwerkt het toevoegen van items, het aanpassen van itemprijzen, het aanpassen van het lijstbudget en het verwijderen van items correct.
+7 van de 7 uitgevoerde testcases (voor Use Case 1 t/m 6) zijn geslaagd. De applicatie verwerkt itemtoevoeging, prijsaanpassing, lijstbudget aanpassen, item verwijderen, zoeken op budget en het berekenen van het spaarplan correct.

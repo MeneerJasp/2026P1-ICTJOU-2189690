@@ -92,8 +92,8 @@ def toon_items_binnen_budget(verbinding):
     """UC5: Toont items waarvan de prijs tussen twee opgegeven budgetgrenzen ligt."""
 
     # Stap 2. Het systeem vraagt om twee budgetgrenzen:
-    grens1 = float(input("Voer de eerste budgetgrens in: "))
-    grens2 = float(input("Voer de tweede budgetgrens in: "))
+    grens1 = float(input("Voer de eerste budgetgrens in: ").replace(",", "."))
+    grens2 = float(input("Voer de tweede budgetgrens in: ").replace(",", "."))
 
     # Stap 3. Het systeem bepaalt automatisch de laagste en hoogste grens:
     min_budget = min(grens1, grens2)
@@ -200,7 +200,13 @@ def voeg_item_toe_aan_db(verbinding, titel, prijs, winkel_naam, lijst_naam, prio
 
 def haal_items_binnen_budget(verbinding, min_budget, max_budget):
     """Haal items op waarvan de prijs tussen min_budget en max_budget ligt."""
-    pass # [Programmeer databasefunctie voor het ophalen van items binnen een budget]
+    cursor = verbinding.cursor()
+    # BETWEEN zoekt inclusief de ondergrens en bovengrens.
+    cursor.execute(
+        "SELECT titel, prijs FROM Item WHERE prijs BETWEEN ? AND ?",
+        (min_budget, max_budget)
+    )
+    return cursor.fetchall()
 
 
 def check_winkel_bestaat(verbinding, winkelnaam):

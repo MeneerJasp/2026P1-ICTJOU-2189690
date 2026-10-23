@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="520" viewBox="0 0 1100 520">
+  <rect width="1100" height="520" fill="white"/>
+  <g fill="white" stroke="#263238" stroke-width="2">
+    <rect x="380" y="20" width="340" height="130" rx="8"/>
+    <line x1="380" y1="60" x2="720" y2="60"/>
+    <rect x="40" y="230" width="310" height="260" rx="8"/>
+    <line x1="40" y1="270" x2="350" y2="270"/>
+    <rect x="395" y="230" width="310" height="260" rx="8"/>
+    <line x1="395" y1="270" x2="705" y2="270"/>
+    <rect x="750" y="230" width="310" height="260" rx="8"/>
+    <line x1="750" y1="270" x2="1060" y2="270"/>
+    <line x1="480" y1="150" x2="195" y2="230"/>
+    <polygon points="195,230 203,221 208,231" fill="#263238"/>
+    <line x1="550" y1="150" x2="550" y2="230"/>
+    <polygon points="550,230 545,220 555,220" fill="#263238"/>
+    <line x1="620" y1="150" x2="905" y2="230"/>
+    <polygon points="905,230 892,231 897,221" fill="#263238"/>
+  </g>
+  <g fill="#263238" font-family="Arial, sans-serif" font-size="15">
+    <text x="455" y="46" font-weight="bold" font-size="17">verlanglijstmanager.py</text>
+    <text x="400" y="85">main()</text>
+    <text x="400" y="110">toon_menu()</text>
+    <text x="400" y="135">maak_verbinding()</text>
+
+    <text x="135" y="256" font-weight="bold" font-size="17">itembeheer.py</text>
+    <text x="55" y="295">voeg_item_toe()</text>
+    <text x="55" y="317">pas_itemprijs_aan()</text>
+    <text x="55" y="339">verwijder_item()</text>
+    <text x="55" y="361">toon_items_binnen_budget()</text>
+    <text x="55" y="383">kies_verlanglijst()</text>
+    <text x="55" y="405">haal_items_van_lijst_op()</text>
+    <text x="55" y="427">update_prijs()</text>
+    <text x="55" y="449">verwijder_item_uit_db()</text>
+    <text x="55" y="471">haal_items_binnen_budget()</text>
+
+    <text x="490" y="256" font-weight="bold" font-size="17">lijstbeheer.py</text>
+    <text x="410" y="295">pas_lijstbudget_aan()</text>
+    <text x="410" y="317">bereken_spaarplan()</text>
+    <text x="410" y="339">toon_overzicht_per_lijst()</text>
+    <text x="410" y="361">haal_verlanglijst_op()</text>
+    <text x="410" y="383">haal_lijsten_op()</text>
+    <text x="410" y="405">haal_lijststatistieken_op()</text>
+    <text x="410" y="427">update_lijstbudget()</text>
+
+    <text x="835" y="256" font-weight="bold" font-size="17">importbeheer.py</text>
+    <text x="765" y="295">importeer_csv()</text>
+    <text x="765" y="317">check_winkel_bestaat()</text>
+    <text x="765" y="339">lijst_bestaat()</text>
+    <text x="765" y="361">voeg_winkel_toe()</text>
+    <text x="765" y="383">voeg_lijst_toe()</text>
+    <text x="765" y="405">voeg_item_toe_aan_db()</text>
+  </g>
+</svg>

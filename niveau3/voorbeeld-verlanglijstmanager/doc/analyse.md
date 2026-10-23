@@ -143,7 +143,21 @@ De eerste versie richt zich op het beheren van bestaande verlanglijsten en items
 ## Increment 2 Use Cases
 
 ### UC5: Zoeken op budget
-[Opstellen Use Case 5]
+**Actor:** Student  
+**Precondities:**
+- De applicatie is gestart.
+
+**Beschrijving:**
+
+1. De student kiest de optie "Zoek items op budget".
+2. Het systeem vraagt om twee budgetgrenzen.
+3. De student voert de twee budgetgrenzen in.
+4. Het systeem bepaalt automatisch de laagste en de hoogste grens.
+5. Het systeem haalt alle items op waarvan de prijs binnen dit bereik ligt.
+6. Het systeem toont per gevonden item de titel en de prijs.
+
+**Alternatieve flows:**
+5. a. Als er geen items binnen het opgegeven budgetbereik vallen, toont het systeem een melding dat er geen items binnen het budgetbereik zijn en stopt de use case.
 
 
 ### UC6: Persoonlijk spaarplan berekenen
