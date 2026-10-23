@@ -1,7 +1,7 @@
 # Testresultaten: Platenbak
 
 * **Uitgevoerd op:** 7 april 2026
-* **Door:** Tijs Veroost
+* **Door:** Jasper van Dis
 
 ## Bevindingen voor uitvoering
 

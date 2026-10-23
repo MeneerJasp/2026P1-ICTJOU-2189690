@@ -2,7 +2,7 @@
 # Testrapport Elftalbeheer
 
 * **Uitgevoerd op:** 30 september 2026
-* **Door:** ChatGPT (geautomatiseerde testuitvoering)
+* **Door:** Jasper van Dis
 
 ## Testscenario 1 - Elftal en speler toevoegen
 
