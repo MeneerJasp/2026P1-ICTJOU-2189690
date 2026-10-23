@@ -1,19 +1,18 @@
 import sqlite3
-import hashlib
 import itembeheer
 import lijstbeheer
 import importbeheer
-from itembeheer import pas_itemprijs_aan
+import beveiliging
 
 DATABASE = "niveau3/voorbeeld-verlanglijstmanager/db/verlanglijstmanager.db"
 
 
 # ==== Functies voor het hoofdmenu en de hoofdfunctie ====
 
-
 def main():
     """Hoofdfunctie die de verbinding met de database maakt en het hoofdmenu toont totdat de gebruiker ervoor kiest om af te sluiten."""
-    # [Programmeer: Controleer toegangscode voordat de gebruiker verder kan]
+    if not beveiliging.controleer_toegangscode():
+        return
 
     verbinding = maak_verbinding()
     if not verbinding:
@@ -21,66 +20,50 @@ def main():
 
     while True:
         keuze = toon_menu()
-        if keuze == '1':
+        if keuze == "1":
             itembeheer.voeg_item_toe(verbinding)
-        elif keuze == '2':
-            pas_itemprijs_aan(verbinding)
-        elif keuze == '3':
+        elif keuze == "2":
+            itembeheer.pas_itemprijs_aan(verbinding)
+        elif keuze == "3":
             itembeheer.verwijder_item(verbinding)
-        elif keuze == '4':
+        elif keuze == "4":
             lijstbeheer.pas_lijstbudget_aan(verbinding)
-        elif keuze == '5':
+        elif keuze == "5":
             itembeheer.toon_items_binnen_budget(verbinding)
-        elif keuze == '6':
+        elif keuze == "6":
             lijstbeheer.bereken_spaarplan(verbinding)
-        elif keuze == '7':
+        elif keuze == "7":
             lijstbeheer.toon_overzicht_per_lijst(verbinding)
-        elif keuze == '8':
+        elif keuze == "8":
             print("Succes met sparen!")
             print("Sessiestatistieken:")
-            # UC8: Print hier hoeveel items er in deze sessie zijn toegevoegd en verwijderd:
-            print("Items toegevoegd:", itembeheer.sessiestatistieken['toegevoegd'])
-            print("Items verwijderd:", itembeheer.sessiestatistieken['verwijderd'])
+            print(f"Items toegevoegd: {itembeheer.sessiestatistieken['toegevoegd']}")
+            print(f"Items verwijderd: {itembeheer.sessiestatistieken['verwijderd']}")
             break
-        elif keuze == '9':
+        elif keuze == "9":
             importbeheer.importeer_csv(verbinding)
         else:
             print("Ongeldige keuze.")
 
+    verbinding.close()
+
 
 def toon_menu():
     """Toont het hoofdmenu en vraagt de gebruiker om een keuze te maken."""
-    print('--- Verlanglijstmanager ---')
-    print('1. Voeg item toe aan verlanglijst')
-    print('2. Pas item prijs aan')
-    print('3. Verwijder item')
-    print('4. Pas lijstbudget aan')
-    print('5. Zoek items op budget')
-    print('6. Persoonlijk spaarplan berekenen')
-    print('7. Uitgaven per lijst inzien')
-    print('8. Afsluiten')
-    print('9. Importeer items uit CSV')
-    return input('Maak een keuze: ')
-
-
-def controleer_toegangscode():
-    """UC10: Controleert of de ingevoerde toegangscode klopt."""
-    # Programmeer Use Case 10, vraag gebruiker om toegangscode in te voeren,
-    # hash deze met behulp van:
-    # hash = hashlib.sha256(ingevoerde_code.encode()).hexdigest()
-    # maak gebruik van de functie lees_toegangscode_hash() om de hash van de toegangscode uit het .env-bestand te lezen
-    # en vergelijk deze met de hash van de door de gebruiker ingevoerde toegangscode.
-    pass
-
-
-def lees_toegangscode_hash():
-    """Leest de hash van de toegangscode uit het .env-bestand."""
-    # Programmeer deze functie met behulp van de voorbeeldcode uit de les.
-    pass
+    print("--- Verlanglijstmanager ---")
+    print("1. Voeg item toe aan verlanglijst")
+    print("2. Pas item prijs aan")
+    print("3. Verwijder item")
+    print("4. Pas lijstbudget aan")
+    print("5. Zoek items op budget")
+    print("6. Persoonlijk spaarplan berekenen")
+    print("7. Uitgaven per lijst inzien")
+    print("8. Afsluiten")
+    print("9. Importeer items uit CSV")
+    return input("Maak een keuze: ")
 
 
 # ==== Databasefuncties ====
-
 
 def maak_verbinding():
     """Maakt een verbinding met de database."""
@@ -90,8 +73,6 @@ def maak_verbinding():
     verbinding.autocommit = True
     return verbinding
 
-
-# ==== Applicatie startpunt ====
 
 if __name__ == "__main__":
     main()

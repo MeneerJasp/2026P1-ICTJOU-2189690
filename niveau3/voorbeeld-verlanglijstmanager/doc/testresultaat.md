@@ -5,7 +5,7 @@
 
 ## Bevindingen voor uitvoering
 
-De tests zijn uitgevoerd op een versgeimporteerde database (via `db/creates.sql` en `db/inserts.sql`). De database werd voorbereid met standaard winkels en lijsten met respectievelijk standaard verzendkosten en budgetlimieten.
+De tests zijn uitgevoerd op een versgeimporteerde database (via `db/creates.sql` en `db/inserts.sql`). De database werd voorbereid met standaard winkels en lijsten met respectievelijk standaard verzendkosten en budgetlimieten. Voor het testen van de toegangsbeveiliging (UC10) is een `.env`-bestand gebruikt met een geldige `TOEGANGSCODE_HASH`.
 
 ## Resultaten
 
@@ -22,7 +22,10 @@ De tests zijn uitgevoerd op een versgeimporteerde database (via `db/creates.sql`
 | TC9: Toon overzicht lijsten (UC7) | Geslaagd |
 | TC10: Afsluiten en sessiestatistieken tonen (UC8) | Geslaagd |
 | TC11: Import CSV items (UC9) | Geslaagd |
+| TC12: Starten met correcte toegangscode (UC10) | Geslaagd |
+| TC13: Starten met onjuiste toegangscode (UC10) | Geslaagd |
+| TC14: Starten zonder TOEGANGSCODE_HASH in .env (UC10) | Geslaagd |
 
 ## Conclusie
 
-11 van de 11 geteste testcases (UC1 t/m UC9) zijn geslaagd. De applicatie verwerkt itemtoevoeging, verwijdering, prijsaanpassingen, budgetgebaseerd zoeken, spaarplanberekening, het statistiekenoverzicht per lijst, de sessiestatistieken en de CSV-import inclusief het automatisch aanmaken van ontbrekende winkels en lijsten correct.
+14 van de 14 uitgevoerde testcases (UC1 t/m UC10) zijn geslaagd. De applicatie verwerkt alle onderdelen uit Increment 1, 2 en 3 correct: toegangscodecontrole via SHA-256 hashing en `.env`, itemtoevoeging, verwijdering, prijsaanpassingen, budgetgebaseerd zoeken, spaarplanberekening, het statistiekenoverzicht per lijst, de sessiestatistieken en de CSV-import.

@@ -408,4 +408,45 @@ Met de standaardmodule `os` kan een Python-programma informatie opvragen bij het
 - **Ja, nu voldoen we aan alle drie de User Concerns:**
   - **C2:** De gebruiker moet bij het opstarten een geldige toegangscode invoeren voordat het menu verschijnt.
   - **C3:** De toegangscode staat niet in de broncode en `.env` staat in `.gitignore`, waardoor er niets in GitLab komt.
-  - **C4:** De toegangscode wordt niet als platte tekst opgeslagen, maar als SHA-256 hash in `.env` bewaard en tijdens het inloggen via hashing gecontroleerd. 
+  - **C4:** De toegangscode wordt niet als platte tekst opgeslagen, maar als SHA-256 hash in `.env` bewaard en tijdens het inloggen via hashing gecontroleerd.
+
+
+---
+
+# Niveau 3, les 8 - Encryptie vs. Hashing, .env beveiligen, Integratiecheck en Sprint Review
+
+## 1. Oefenen met hashing en encryptie
+
+### Klassieke en moderne encryptie
+
+- **Originele zin:** `De snelle bruine vos springt over de luie hond`
+- **Versleuteld met Caesar cipher (verschuiving van +3):**
+  `Gh vqhooh euxlqh yrv vsulqjw ryhu gh oxlh krqg`
+  - *Hoe te achterhalen:* Door elke letter 3 posities terug te schuiven in het alfabet (`G -> D`, `h -> e`).
+- **Versleuteld met Atbash cipher (alfabet gespiegeld: A <-> Z, B <-> Y):**
+  `Wv hmvoor yifrmv elh hkirmtg levi wv ofrv slmw`
+- **Moderne encryptie (AES - Advanced Encryption Standard):**
+  - Bij AES wordt de tekst met een geheime sleutel (bijv. 128 of 256 bits) wiskundig versleuteld tot onleesbare data. Zonder de juiste sleutel is de tekst niet te ontsleutelen, maar **met** de sleutel kun je altijd weer exact de originele zin terugkrijgen (tweerichtingsverkeer).
+
+### Hashing van een Nederlands woord (`koe`)
+
+- **Woord:** `koe`
+- **MD5-hash (via echte hash-tool / Python `hashlib`):**
+  `1e06ceffa8540915d9d193832870adea`
+- **SHA-256-hash:**
+  `841bb7721cad851a2085604d0b0e418984764bf6356acdc69d94cc672621f33e`
+- **Waarom is het achterhalen van een woord uit een hash anders dan decryptie?**
+  - Je kunt een hash niet "ontsleutelen" (decrypteren), omdat informatie tijdens het hashen onomkeerbaar verloren gaat. De enige manier om te ontdekken welk woord bij een hash hoort, is door woorden te **raden**, er opnieuw de hash van te berekenen en te kijken of die overeenkomt (bijvoorbeeld met een woordenboeklijst of een *rainbow table* met vooraf berekende hashes van bekende woorden).
+- **Waarom geeft een taalmodel (zoals ChatGPT zonder code-tool) vaak een foute MD5-hash?**
+  - Een Large Language Model (LLM) is geen rekenmachine die bit-operaties van het MD5-algoritme stap voor stap uitvoert, maar voorspelt op basis van kansberekening een reeks van 32 hexadecimale tekens die *lijkt* op een MD5-hash (of plakt een hash die het ooit op internet bij een ander woord heeft gezien). Alleen door een echt hash-programma (zoals Python `hashlib` of `md5sum` in Linux) uit te voeren krijg je gegarandeerd de juiste hash.
+
+---
+
+## 2. Het `.env`-bestand beveiligen in Linux met `chmod`
+
+Naast het opnemen van `.env` in `.gitignore` kun je in Linux voorkomen dat andere gebruikers op dezelfde computer het `.env`-bestand kunnen lezen:
+
+```bash
+chmod 600 .env
+ls -la .env
+```
