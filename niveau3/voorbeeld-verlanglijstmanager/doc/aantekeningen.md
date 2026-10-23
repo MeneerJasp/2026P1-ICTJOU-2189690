@@ -450,3 +450,43 @@ Naast het opnemen van `.env` in `.gitignore` kun je in Linux voorkomen dat ander
 chmod 600 .env
 ls -la .env
 ```
+
+
+---
+
+# Niveau 3, les 8 - Samen & Zelf (Voorbereiding Niveau 4)
+
+## 1. Exception-handling (try/except)
+
+### Waarom crasht leeftijd = int(input("Wat is je leeftijd? ")) bij "achttien"?
+- Het commando `int(...)` zorgt voor de crash. `input()` geeft de tekst `"achttien"` terug en `int()` kan letters niet omzetten naar een geheel getal, waardoor Python crasht met een `ValueError`.
+
+### Met if en isdigit()
+```python
+leeftijd = input("Wat is je leeftijd? ")
+if leeftijd.isdigit():
+    print(f"Je leeftijd is {int(leeftijd)} jaar.")
+else:
+    print("Fout: voer een geldig getal in.")
+```
+- `"20"` wordt geaccepteerd, omdat het alleen uit cijfers bestaat.
+- `"achttien"` en `"15.5"` worden geweigerd (letters en de punt zijn geen cijfers).
+- `"-18"` wordt ook geweigerd, omdat `isdigit()` het minteken `-` niet als cijfer ziet.
+
+### Met try/except
+- We vangen specifiek de fout `ValueError` af:
+```python
+try:
+    leeftijd = int(input("Wat is je leeftijd? "))
+    print(f"Je leeftijd is {leeftijd} jaar.")
+except ValueError:
+    print("Fout: voer een geldig getal in.")
+```
+
+---
+
+## 2. Interviews en User Stories van Klaskompas en Oosteling
+
+De user stories die ik met de kennis tot nu toe nog niet kan programmeren gaan over het maken van grafieken en diagrammen (met `matplotlib`):
+- **Klaskompas:** US5 / UC8 (staafdiagram van hoe ver studenten van school wonen) en US12 / UC9 (taartdiagram van populaire hobby's).
+- **Oosteling:** US8 (staafdiagram met het aantal onderhoudsbeurten per attractie) en US9 (taartdiagram met het aantal onderhoudsbeurten per onderhoudstype). 
