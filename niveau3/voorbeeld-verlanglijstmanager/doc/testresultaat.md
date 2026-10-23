@@ -18,10 +18,11 @@ De tests zijn uitgevoerd op een versgeimporteerde database (via `db/creates.sql`
 | TC5: Item verwijderen (succesvol) | Geslaagd |
 | TC6: Zoeken op budget | Geslaagd |
 | TC7: Pas lijstbudget aan | Geslaagd |
-| TC8: Toon volledige verlanglijst | Nog niet getest |
-| TC9: Toon overzicht lijsten | Nog niet getest |
-| TC10: Import CSV items | Nog niet getest |
+| TC8: Persoonlijk spaarplan berekenen (UC6) | Geslaagd |
+| TC9: Toon overzicht lijsten (UC7) | Geslaagd |
+| TC10: Afsluiten en sessiestatistieken tonen (UC8) | Geslaagd |
+| TC11: Import CSV items (UC9) | Nog te testen in Increment 3 |
 
 ## Conclusie
 
-7 van de 7 uitgevoerde testcases (voor Use Case 1 t/m 6) zijn geslaagd. De applicatie verwerkt itemtoevoeging, prijsaanpassing, lijstbudget aanpassen, item verwijderen, zoeken op budget en het berekenen van het spaarplan correct.
+10 van de 10 geteste testcases van Increment 1 en Increment 2 (UC1 t/m UC8) zijn geslaagd. De applicatie verwerkt itemtoevoeging, verwijdering, prijsaanpassingen, budgetgebaseerd zoeken, spaarplanberekening, het statistiekenoverzicht per lijst en de sessiestatistieken bij het afsluiten correct.

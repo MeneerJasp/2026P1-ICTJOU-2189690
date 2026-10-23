@@ -1,77 +1,77 @@
 # ==== Use Case functies ====
 
-
 def pas_lijstbudget_aan(verbinding):
     """UC3: Past het budgetlimiet van een lijst aan op basis van de gebruikersinvoer."""
     lijsten = haal_lijsten_op(verbinding)
-    if not lijsten:
-        print("Er zijn geen verlanglijsten.")
+    if len(lijsten) == 0:
+        print("Fout: Er zijn geen lijsten beschikbaar.")
         return
 
+    print("Beschikbare verlanglijsten:")
     for volgnummer, lijst in enumerate(lijsten, start=1):
-        print(f"{volgnummer}. {lijst['naam']} - Budget: €{lijst['budget_limiet']:.2f}")
+        print(f"{volgnummer}. {lijst['naam']} (Huidig budget: EUR {lijst['budget_limiet']:.2f})")
 
-    keuze = int(input("Welke verlanglijst kies je? (nummer): "))
+    keuze = int(input("Kies een lijst (nummer): "))
     if keuze < 1 or keuze > len(lijsten):
         print("Ongeldige keuze.")
         return
 
-    lijstnaam = lijsten[keuze - 1]['naam']
-    nieuw_budget = float(input("Nieuw budget: ").replace(",", "."))
+    gekozen_lijst = lijsten[keuze - 1]["naam"]
+    nieuw_budget = float(input("Voer het nieuwe budget in: ").replace(",", "."))
+    if nieuw_budget < 0:
+        print("Ongeldig budget.")
+        return
 
-    update_lijstbudget(verbinding, lijstnaam, nieuw_budget)
+    update_lijstbudget(verbinding, gekozen_lijst, nieuw_budget)
     print("Lijstbudget succesvol bijgewerkt!")
 
 
 def bereken_spaarplan(verbinding):
     """UC6: Bereken een persoonlijk spaarplan voor een gekozen item op basis van de prijs en het aantal maanden dat de gebruiker wil sparen."""
-
-    # 2. Het systeem toont een genummerde lijst van alle items met hun huidige prijs:
     items = haal_verlanglijst_op(verbinding)
-    if not items:
-        print("Er zijn geen items beschikbaar voor een spaarplan.")
+    if len(items) == 0:
+        print("Fout: Er zijn geen items beschikbaar.")
         return
 
     for volgnummer, item in enumerate(items, start=1):
-        print(f"{volgnummer}. [{item['lijstnaam']}] {item['titel']} - €{item['prijs']:.2f}")
+        print(f"{volgnummer}. [{item['lijstnaam']}] {item['titel']} - EUR {item['prijs']:.2f}")
 
-    # 3. De student voert het nummer (index) van het gewenste item in.
     keuze = int(input("Voor welk item wil je een spaarplan? (nummer): "))
-    if not 1 <= keuze <= len(items):
+    if keuze < 1 or keuze > len(items):
         print("Ongeldige keuze.")
         return
 
     gekozen_item = items[keuze - 1]
-    prijs = float(gekozen_item['prijs'])
+    prijs = float(gekozen_item["prijs"])
 
-    # 4. Het systeem vraagt over hoeveel maanden het item gekocht moet worden.
     maanden = int(input("Over hoeveel maanden wil je dit kopen? "))
+    if maanden <= 0:
+        print("Ongeldig aantal maanden.")
+        return
 
-    # 6. Het systeem toont voor elke maand het totale bedrag dat tot dan toe gespaard moet zijn.
     print(f"Spaarplan voor {gekozen_item['titel']} ({gekozen_item['lijstnaam']}):")
-
     for maand in range(1, maanden + 1):
-        # 5. Het systeem berekent per maand het cumulatieve spaarbedrag.
         gespaard = prijs * maand / maanden
-        print(f"Maand {maand}: Totaal gespaard: €{gespaard}")
+        print(f"Maand {maand}: Totaal gespaard: EUR {gespaard:.2f}")
 
 
 def toon_overzicht_per_lijst(verbinding):
-    """UC7: Toont een overzicht van items per lijst inclusief statistieken zoals aantal items, goedkoopste item, duurste item, gemiddelde prijs, totaalbedrag en budgetlimiet. Waarschuwt als het totaalbedrag het budget overschrijdt."""
+    """UC7: Toont een overzicht van items per lijst inclusief statistieken en waarschuwt als het totaalbedrag het budget overschrijdt."""
     lijststatistieken = haal_lijststatistieken_op(verbinding)
     if not lijststatistieken:
         print("Er zijn geen items beschikbaar voor overzicht per lijst.")
         return
 
     for rij in lijststatistieken:
-        lijstnaam = rij['lijstnaam']
-        budget_limiet = rij['budget_limiet']
-        aantal_items = rij['aantal_items']
-        goedkoopste_item = rij['goedkoopste_item']
-        duurste_item = rij['duurste_item']
-        gemiddelde_prijs = rij['gemiddelde_prijs']
-        totaalbedrag_items = rij['totaalbedrag_items']
-        totaalbedrag_inclusief_verzending = rij['totaalbedrag_inclusief_verzending']
+        lijstnaam = rij["lijstnaam"]
+        budget_limiet = rij["budget_limiet"]
+        aantal_items = rij["aantal_items"]
+        goedkoopste_item = rij["goedkoopste_item"]
+        duurste_item = rij["duurste_item"]
+        gemiddelde_prijs = rij["gemiddelde_prijs"]
+        totaalbedrag_items = rij["totaalbedrag_items"]
+        totaalbedrag_inclusief_verzending = rij["totaalbedrag_inclusief_verzending"]
+
         print("\033[1m" + "=== " + lijstnaam + " ===" + "\033[0m")
         print("Aantal items: " + str(aantal_items))
         print("Goedkoopste item: " + str(goedkoopste_item))
@@ -86,6 +86,21 @@ def toon_overzicht_per_lijst(verbinding):
 
 # ==== Databasefuncties ====
 
+def haal_lijsten_op(verbinding):
+    """Haalt alle lijsten op inclusief hun budgetlimiet."""
+    cursor = verbinding.cursor()
+    cursor.execute("SELECT naam, budget_limiet FROM Lijst ORDER BY naam")
+    return cursor.fetchall()
+
+
+def update_lijstbudget(verbinding, lijstnaam, nieuw_budget):
+    """Update het budgetlimiet van een lijst."""
+    cursor = verbinding.cursor()
+    cursor.execute(
+        "UPDATE Lijst SET budget_limiet = ? WHERE naam = ?",
+        (nieuw_budget, lijstnaam)
+    )
+
 
 def haal_verlanglijst_op(verbinding):
     """Haalt items op inclusief winkel- en lijstnaam."""
@@ -99,22 +114,25 @@ def haal_verlanglijst_op(verbinding):
     return cursor.fetchall()
 
 
-def haal_lijsten_op(verbinding):
-    """Haalt alle lijsten op inclusief hun budgetlimiet."""
-    cursor = verbinding.cursor()
-    cursor.execute("SELECT naam, budget_limiet FROM Lijst ORDER BY naam")
-    return cursor.fetchall()
-
-
 def haal_lijststatistieken_op(verbinding):
     """Haalt alle UC7-statistieken per lijst op via een geaggregeerde query over drie tabellen."""
-    pass # [Programmeer databasefunctie voor het ophalen van UC7-statistieken per lijst, gebruik een SQL-query met JOIN en GROUP BY]
-
-
-def update_lijstbudget(verbinding, lijstnaam, nieuw_budget):
-    """Update het budgetlimiet van een lijst."""
     cursor = verbinding.cursor()
-    cursor.execute(
-        "UPDATE Lijst SET budget_limiet = ? WHERE naam = ?",
-        (nieuw_budget, lijstnaam)
-    )
+    # INNER JOIN over Lijst, Item en Winkel met GROUP BY per lijst.
+    query = """
+        SELECT
+            l.naam AS lijstnaam,
+            l.budget_limiet,
+            COUNT(i.titel) AS aantal_items,
+            MIN(i.prijs) AS goedkoopste_item,
+            MAX(i.prijs) AS duurste_item,
+            AVG(i.prijs) AS gemiddelde_prijs,
+            SUM(i.prijs) AS totaalbedrag_items,
+            SUM(i.prijs + w.verzendkosten) AS totaalbedrag_inclusief_verzending
+        FROM Lijst l
+        INNER JOIN Item i ON i.lijst = l.naam
+        INNER JOIN Winkel w ON w.naam = i.winkel
+        GROUP BY l.naam, l.budget_limiet
+        ORDER BY l.naam
+    """
+    cursor.execute(query)
+    return cursor.fetchall()

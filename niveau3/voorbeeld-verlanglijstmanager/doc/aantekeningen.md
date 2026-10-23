@@ -184,3 +184,104 @@ SELECT
 FROM Item
 INNER JOIN Lijst ON Item.lijst = Lijst.naam
 INNER JOIN Winkel ON Item.winkel = Winkel.naam;
+```
+
+---
+
+# Niveau 3, les 6 - Besturingssysteem, Bootproces en GROUP BY
+
+## 1. Besturingssysteem en bootproces
+
+### Stap 1 en 2: Zeven apparaten en hun kenmerken
+
+| Nr. | Apparaat | Is het een computer? | Type systeem (Klassiek OS / Embedded OS / Firmware) |
+|---|---|---|---|
+| 1 | Laptop | Ja | Klassiek besturingssysteem (Windows / Linux / macOS) |
+| 2 | Smartphone | Ja | Klassiek/mobiel besturingssysteem (Android / iOS) |
+| 3 | Smartwatch | Ja | Embedded besturingssysteem (Wear OS / watchOS / FreeRTOS) |
+| 4 | Wi-Fi router | Ja | Embedded besturingssysteem (vaak embedded Linux zoals OpenWrt) |
+| 5 | Printer | Ja | Embedded besturingssysteem of uitgebreide firmware |
+| 6 | Magnetron | Ja (microcontroller) | Alleen firmware (vast programma op een chip) |
+| 7 | Auto-ECU (motormanagement) | Ja (microcontroller) | Firmware / Real-Time Embedded OS (RTOS) |
+
+### Stap 3 - Groepsopdrachten
+
+#### Opdracht A - Wat is een OS?
+
+- **Wel een besturingssysteem:** Windows, Linux, Android, macOS, iOS.
+- **Geen besturingssysteem:**
+  - *Raspberry Pi*: Dit is hardware (een single-board computer) waarop je een OS zoals Raspberry Pi OS (Linux) installeert.
+  - *Arduino*: Dit is een microcontrollerbordje zonder besturingssysteem; je zet er rechtstreeks gecompileerde code (firmware) op.
+  - *Firefox, WhatsApp, Word*: Dit zijn applicaties (toepassingsprogramma's) die bovenop een besturingssysteem draaien.
+
+#### Opdracht B - BIOS, UEFI, bootloader en kernel
+
+**Logische opstartvolgorde:**
+1. Firmware (algemene naam voor software op het moederbord: BIOS of UEFI)
+2. BIOS / UEFI
+3. Bootloader (bijv. GRUB of Windows Boot Manager)
+4. Kernel (de kern van het besturingssysteem)
+5. OS-services (achtergrondprocessen en drivers)
+6. Gebruikersomgeving (login-scherm, desktop of terminal/shell)
+7. Interpreter (Python interpreter `python3`)
+8. Python-code (`verlanglijstmanager.py`)
+
+**Verschil tussen BIOS en UEFI:**
+- **BIOS** is het oudere opstartsysteem dat werkt met een tekstscherm (16-bit modus) en opstart via de MBR (Master Boot Record) met een limiet van ongeveer 2 TB per schijf.
+- **UEFI** is de moderne opvolger van BIOS met ondersteuning voor grotere schijven via GPT (GUID Partition Table), snellere opstarttijden, Secure Boot en vaak een grafische interface met muisondersteuning.
+
+#### Opdracht C - Bootproces ordenen
+
+1. `power on`
+2. `BIOS/UEFI check (POST)` (Power-On Self-Test controleert of geheugen, CPU en opslag aanwezig zijn)
+3. `boot device kiezen` (bijv. SSD of USB-stick)
+4. `bootloader` (startlader op de schijf wordt geladen)
+5. `kernel laden` (de kern van het besturingssysteem wordt in het RAM-geheugen geladen)
+6. `drivers/services starten` (hardware-aansturing en systeemdiensten starten op)
+7. `login-scherm` (gebruiker kan inloggen)
+
+#### Opdracht D - Zonder klassiek OS?
+
+- **Magnetron:** Vooral **firmware** (een microcontroller voert een vaste loop uit voor tijd, vermogen en knopjes).
+- **Router:** **Embedded OS** (vaak een kleine Linux-versie die netwerkverkeer, firewall en wifi regelt).
+- **Printer:** **Embedded OS** of **firmware** (afhankelijk van hoe slim de printer is; netwerkprinters met touchscreen draaien een embedded OS).
+- **Smartwatch:** **Embedded OS** (speciaal energiezuinig besturingssysteem voor horloges).
+- **Auto-ECU:** **Firmware / RTOS** (moet binnen milliseconden reageren op sensoren voor brandstofinjectie en ontsteking).
+- **Je telefoon:** **Klassiek (mobiel) OS** (Android of iOS met app-installatie, geheugenbeheer en gebruikersaccounts).
+- **Je laptop:** **Klassiek OS** (Windows, Linux of macOS).
+
+---
+
+## 2. Python -> interpreter -> OS -> hardware
+
+### Stap 1 - De keten per voorbeeld
+
+1. **`print("Hallo")`**
+   - Python-code (`print("Hallo")`) -> Python-interpreter (vertaalt `print` naar een systeemaanroep / `write` syscall) -> Besturingssysteem / Kernel (stuurt de tekst via de grafische driver of terminal-driver aan) -> Hardware (beeldscherm toont `Hallo`).
+2. **`x = 3 + 4`**
+   - Python-code (`x = 3 + 4`) -> Python-interpreter (vertaalt de optelling naar bytecode en machine-instructies) -> Besturingssysteem (wijst CPU-tijd en werkgeheugen toe aan het Python-proces) -> Hardware (de ALU in de CPU telt 3 en 4 op en slaat 7 op in het RAM-geheugen).
+3. **`input("Naam?")`**
+   - Python-code (`input("Naam?")`) -> Python-interpreter (vraagt het OS om tekst te tonen en te wachten op toetsenbordinvoer via een `read` syscall) -> Besturingssysteem / Drivers (leest de toetsaanslagen van de toetsenbord-driver en geeft ze bij Enter door aan de interpreter) -> Hardware (toetsenbord en beeldscherm).
+
+### Uitleg in eigen woorden
+
+- **Wat doet de interpreter?** De Python-interpreter leest jouw `.py`-bestand, controleert de syntax en vertaalt de Python-instructies stap voor stap (via bytecode) naar systeemaanroepen en machine-instructies die het besturingssysteem en de CPU begrijpen.
+- **Wat doet het OS?** Het besturingssysteem beheert de hardwarebronnen (CPU-tijd, RAM-geheugen, schijven, scherm en toetsenbord) en zorgt ervoor dat verschillende programma's veilig en tegelijk kunnen draaien zonder elkaar in de weg te zitten.
+- **Waarom zijn drivers nodig?** Er bestaan duizenden verschillende merken en modellen toetsenborden, schermen, netwerkkaarten en schijven. Een driver is het vertaalstukje tussen het besturingssysteem en een specifiek stuk hardware, zodat het OS niet voor elk merk aparte code hoeft te bevatten.
+
+### Stap 2 - Hoe zit dit met onze virtuele machine (VM)?
+
+- **Welk OS draait daar?** In onze virtuele machine draait **Linux** (bijvoorbeeld Fedora of Ubuntu) als *guest OS*, bovenop het *host OS* (zoals Windows of macOS) van de laptop.
+- **Hoe ziet de complete keten er dan uit?**
+  Python-code -> Python-interpreter -> Guest OS (Linux in de VM) -> Virtuele hardware / Hypervisor (bijv. VirtualBox of VMware) -> Host OS (bijv. Windows) -> Drivers -> Fysieke hardware (echte CPU, RAM, SSD en scherm van de laptop).
+
+---
+
+## 3. Herhaling GROUP BY en statistische functies (Verlanglijstmanager)
+
+1. **Geef van elke lijst de lijstnaam en het aantal items dat in die lijst staat. Lijsten zonder items hoeven niet getoond.**
+```sql
+SELECT Lijst.naam AS lijstnaam, COUNT(Item.titel) AS aantal_items
+FROM Lijst
+INNER JOIN Item ON Item.lijst = Lijst.naam
+GROUP BY Lijst.naam;
